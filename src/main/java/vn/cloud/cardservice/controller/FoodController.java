@@ -33,10 +33,26 @@ public class FoodController {
 		Dummy returnedObj = dummyRepository.save(dummy);
 
 		if(returnedObj != null) {
-			return new ResponseEntity<Dummy>(dummy,HttpStatus.OK);
+			return new ResponseEntity<>(dummy,HttpStatus.OK);
 		}
 		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 
+	@PostMapping("/dummy/authenticate")
+	public ResponseEntity<Dummy> authenticate(@RequestBody Dummy dummyOther){
+
+
+		Optional<Dummy> dummyOpt = dummyRepository.findByEmail(dummyOther.getEmail());
+
+
+		if(dummyOpt.isPresent()){
+			Dummy dummyRepo = dummyOpt.get();
+			if(dummyRepo.getEmail().equals(dummyOther.getEmail()) && dummyRepo.getPassword().equals(dummyOther.getPassword()) ) {
+				return new ResponseEntity<>(dummyRepo,HttpStatus.OK);
+			}
+		}
+
+		return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 	}
 
 
