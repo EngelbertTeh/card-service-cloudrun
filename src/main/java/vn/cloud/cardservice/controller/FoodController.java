@@ -1,11 +1,13 @@
 	package vn.cloud.cardservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vn.cloud.cardservice.model.Dummy;
 import vn.cloud.cardservice.model.Test;
 
 
@@ -17,5 +19,11 @@ public class FoodController {
 	public ResponseEntity<String> sayHello(@RequestBody Test test){
 		return new ResponseEntity<>(test.getEmail(), HttpStatus.OK);
 	}
+
+	@PostMapping("/dummy")
+	public String sayHello(@RequestBody Dummy dummy){
+		return dummy.getEmail();
+	}
+
 
 }
