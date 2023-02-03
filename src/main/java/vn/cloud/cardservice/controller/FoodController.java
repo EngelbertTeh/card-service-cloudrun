@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import vn.cloud.cardservice.model.Dummy;
 import vn.cloud.cardservice.model.Test;
+import vn.cloud.cardservice.repository.DummyRepository;
+
+import java.util.Optional;
 
 
 	@RestController
@@ -20,9 +23,20 @@ public class FoodController {
 		return new ResponseEntity<>(test.getEmail(), HttpStatus.OK);
 	}
 
+	@Autowired
+	DummyRepository dummyRepository;
+
 	@PostMapping("/dummy")
-	public String sayHello(@RequestBody Dummy dummy){
-		return dummy.getEmail();
+	public ResponseEntity<Dummy> sayHello(@RequestBody Dummy dummy){
+
+
+		Dummy returnedObj = dummyRepository.save(dummy);
+
+		if(returnedObj != null) {
+			return new ResponseEntity<Dummy>(dummy,HttpStatus.OK);
+		}
+		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 	}
 
 
