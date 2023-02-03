@@ -1,0 +1,18 @@
+server:
+  servlet:
+    context-path: /card-service
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql:///postgres
+    username: postgres
+    password: cardpassword
+    hikari:
+      data-source-properties:
+        socketFactory: com.google.cloud.sql.postgres.SocketFactory
+        cloudSqlInstance: card-service-dev-376619:asia-southeast2:card-db
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
