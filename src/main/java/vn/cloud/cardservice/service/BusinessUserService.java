@@ -6,6 +6,7 @@ import vn.cloud.cardservice.model.BusinessUser;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BusinessUserService {
@@ -23,4 +24,10 @@ public class BusinessUserService {
             return null;
         }
     }
+
+    public BusinessUser findById(Long id) {
+        Optional<BusinessUser> bUserOpt =  businessUserRepository.findById(id);
+        return bUserOpt.get();
+    }
 }
+

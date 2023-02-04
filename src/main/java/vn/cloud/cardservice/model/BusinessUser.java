@@ -19,7 +19,6 @@ public class BusinessUser extends BaseUserModel
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-    private String category = "Corporate User"; // don't include this in db
     private String businessName;
     private String branch;
     private String businessType;

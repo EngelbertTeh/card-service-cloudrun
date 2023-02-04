@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Data
 @Entity
-public class FoodWaste {
+public class FoodWastePackage {
 
     @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

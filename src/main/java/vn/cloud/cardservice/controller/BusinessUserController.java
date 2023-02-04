@@ -19,6 +19,17 @@ public class BusinessUserController {
     @Autowired
     BusinessUserService businessUserService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BusinessUser> getUserById (@PathVariable Long id) {
+        if(id!=null){
+            BusinessUser bUser= businessUserService.findById(id);
+            if(bUser != null) {
+                return new ResponseEntity<>(bUser,HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     // get list
     @GetMapping("/get-list")
     public ResponseEntity<List<BusinessUser>> getAllBusinessUsers(){
