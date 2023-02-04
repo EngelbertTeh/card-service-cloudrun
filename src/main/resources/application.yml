@@ -4,13 +4,13 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql:///${DB_DATABASE}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql:///${DB_DATABASE:postgres}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:cardpassword}
     hikari:
       data-source-properties:
         socketFactory: com.google.cloud.sql.postgres.SocketFactory
-        cloudSqlInstance: ${DB_CLOUD_SQL_INSTANCE}
+        cloudSqlInstance: ${DB_CLOUD_SQL_INSTANCE:card-service-dev-376619:asia-southeast2:card-db}
   jpa:
     hibernate:
       ddl-auto: update
