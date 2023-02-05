@@ -61,10 +61,14 @@ public class IndividualUserController {
     @PostMapping("/authenticate")
     public ResponseEntity<IndividualUser> authenticate(@RequestBody LoginDTO loginDTO) {
         if (loginDTO != null) {
-            IndividualUser individualUserR = individualUserService.authenticate(loginDTO);
+            IndividualUser individualUserR = individualUserService.getUserByEmail(loginDTO.getEmail());
             if (individualUserR != null) {
-                return new ResponseEntity<>(individualUserR, HttpStatus.OK);
+                boolean isAuthenticated = individualUserService.authenticate(loginDTO,individualUserR);
+                if(isAuthenticated) {
+                    return new ResponseEntity<>(individualUserR,HttpStatus.OK);
+                }
             }
+            return new ResponseEntity<>(null,HttpStatus.OK); // status OK even if email/password wrong, to indicate to client that credentials had been checked
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

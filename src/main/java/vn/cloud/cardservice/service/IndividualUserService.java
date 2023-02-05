@@ -7,10 +7,13 @@ import vn.cloud.cardservice.model.IndividualUser;
 import vn.cloud.cardservice.repository.IndividualUserRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class IndividualUserService {
+
+    Map<Boolean,IndividualUser> map;
     @Autowired
     IndividualUserRepository individualUserRepository;
 
@@ -37,6 +40,20 @@ public class IndividualUserService {
         }
         return null;
     }
+
+    public IndividualUser getUserByEmail(String email) {
+        try {
+            Optional<IndividualUser> individualUserOpt =  individualUserRepository.findByEmail(email);
+            if(individualUserOpt.isPresent()) {
+                return individualUserOpt.get();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
     public List<IndividualUser> getAllIndividualUsers(){
         try {
             return individualUserRepository.findAll();
@@ -53,19 +70,8 @@ public class IndividualUserService {
 
 
     //Login Authentication
-    public IndividualUser authenticate(LoginDTO loginDTO) {
-        try {
-            Optional<IndividualUser> individualUserOpt = individualUserRepository.findByEmail(loginDTO.getEmail());
-            if (individualUserOpt.isPresent()) {
-                IndividualUser individualUserR = individualUserOpt.get();
-                if (individualUserR.getEmail().equals(loginDTO.getEmail()) && individualUserR.getPassword().equals(loginDTO.getPassword())) {
-                    return individualUserR;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return null;
+    public boolean authenticate(LoginDTO loginDTO, IndividualUser individualUserR) {
+        return loginDTO.getEmail().equals(individualUserR.getEmail()) && loginDTO.getPassword().equals(individualUserR.getPassword());
     }
+
 }

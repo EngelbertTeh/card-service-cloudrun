@@ -39,6 +39,20 @@ public class BusinessUserService {
         }
         return null;
     }
+
+    public BusinessUser getUserByEmail(String email) {
+        try {
+            Optional<BusinessUser> businessUserOpt =  businessUserRepository.findByEmail(email);
+            if(businessUserOpt.isPresent()) {
+                return businessUserOpt.get();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+    
     public List<BusinessUser> getAllBusinessUsers(){
         try {
             return businessUserRepository.findAll();
@@ -55,20 +69,9 @@ public class BusinessUserService {
 
 
     //Login Authentication
-    public BusinessUser authenticate(LoginDTO loginDTO) {
-        try {
-            Optional<BusinessUser> businessUserOpt = businessUserRepository.findByEmail(loginDTO.getEmail());
-            if (businessUserOpt.isPresent()) {
-                BusinessUser businessUserR = businessUserOpt.get();
-                if (businessUserR.getEmail().equals(loginDTO.getEmail()) && businessUserR.getPassword().equals(loginDTO.getPassword())) {
-                    return businessUserR;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return null;
+    public boolean authenticate(LoginDTO loginDTO, BusinessUser businessUserR) {
+        return loginDTO.getEmail().equals(businessUserR.getEmail()) && loginDTO.getPassword().equals(businessUserR.getPassword());
     }
+
 }
 

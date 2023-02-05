@@ -62,12 +62,15 @@ public class BusinessUserController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<BusinessUser> authenticate(@RequestBody LoginDTO loginDTO) {
-
         if (loginDTO != null) {
-            BusinessUser businessUserR = businessUserService.authenticate(loginDTO);
+            BusinessUser businessUserR = businessUserService.getUserByEmail(loginDTO.getEmail());
             if (businessUserR != null) {
-                return new ResponseEntity<>(businessUserR, HttpStatus.OK);
+                boolean isAuthenticated = businessUserService.authenticate(loginDTO,businessUserR);
+                if(isAuthenticated) {
+                    return new ResponseEntity<>(businessUserR,HttpStatus.OK);
+                }
             }
+            return new ResponseEntity<>(null,HttpStatus.OK); // status OK even if email/password wrong, to indicate to client that credentials had been checked
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
