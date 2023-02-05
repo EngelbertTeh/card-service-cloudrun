@@ -3,7 +3,7 @@ package vn.cloud.cardservice.dto;
 import lombok.Data;
 
 @Data
-public class WebAppLoginDTO {
+public class LoginDTO {
     private String email;
     private String password;
 }
