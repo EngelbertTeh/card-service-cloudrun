@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import vn.cloud.cardservice.dto.LoginDTO;
+import vn.cloud.cardservice.dto.WebAppLoginDTO;
 import vn.cloud.cardservice.model.BusinessUser;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
 import vn.cloud.cardservice.service.BusinessUserService;
@@ -55,14 +55,14 @@ public class BusinessUserController {
     BusinessUserRepository businessUserRepository;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<BusinessUser> authenticatePost(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<BusinessUser> authenticatePost(@RequestBody WebAppLoginDTO webAppLoginDTO){
 
-        if(loginDTO!=null){
-            Optional<BusinessUser> bUserOpt = businessUserRepository.findByEmail(loginDTO.getEmail());
+        if(webAppLoginDTO!=null){
+            Optional<BusinessUser> bUserOpt = businessUserRepository.findByEmail(webAppLoginDTO.getEmail());
 
             if(bUserOpt.isPresent()){
                 BusinessUser bUserFromRepo = bUserOpt.get();
-                if(bUserFromRepo.getEmail().equals(loginDTO.getEmail()) && bUserFromRepo.getPassword().equals(loginDTO.getPassword()) ) {
+                if(bUserFromRepo.getEmail().equals(webAppLoginDTO.getEmail()) && bUserFromRepo.getPassword().equals(webAppLoginDTO.getPassword()) ) {
                     return new ResponseEntity<>(bUserFromRepo,HttpStatus.OK);
                 }
             }

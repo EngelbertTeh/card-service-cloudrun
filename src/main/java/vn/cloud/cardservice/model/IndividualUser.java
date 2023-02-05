@@ -3,12 +3,12 @@ package vn.cloud.cardservice.model;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import vn.cloud.cardservice.validator.NoFunnyNames;
-
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -32,27 +32,28 @@ public class IndividualUser extends BaseUserModel{
 	 
 	 @Nullable
 	 @Pattern(regexp="^\\+[0-9]+[0-9]+") //country code and phone number
-	 @Column(nullable=true)
 	 private String phone;
 
 	 @Min(value = 0)
 	 @Column(nullable=false)
 	 private Double salary = 0.00;
 
+	 @NotBlank
 	 @Column(nullable=false)
-	 private String level;
+	 private String role;
 
-	 @Min(value=0)
-	 @Column(nullable=false)
-	 private Integer points = 0;
-
-	 @DateTimeFormat(pattern = "dd/MM/yyyy")
-	 @Past
-	 @Nullable
-	 @Column(nullable=true)
-	 private LocalDate birth;
-
-
+//	 @Column(nullable=false)
+//	 private String level;
+//
+//	 @Min(value=0)
+//	 @Column(nullable=false)
+//	 private Integer points = 0;
+//
+//	 @DateTimeFormat(pattern = "dd/MM/yyyy")
+//	 @Past
+//	 @Nullable
+//	 @Column(nullable=true)
+//	 private LocalDate birth;
 
 
 //	 @NotNull
