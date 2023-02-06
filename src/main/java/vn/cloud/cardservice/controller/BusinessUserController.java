@@ -69,7 +69,7 @@ public class BusinessUserController {
 
     //Delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteBusinessUser(Long id) {
+    public ResponseEntity<Boolean> deleteBusinessUser(@PathVariable Long id) {
         if(id != null){
             boolean isDeleted = businessUserService.deleteBusinessUserById(id);
             if(isDeleted) {

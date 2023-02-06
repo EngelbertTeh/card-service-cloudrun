@@ -67,7 +67,7 @@ public class FoodWasteBundleController {
 
 		//Delete
 		@DeleteMapping("/delete/{id}")
-		public ResponseEntity<Boolean> deleteFoodWasteBundle(Long id) {
+		public ResponseEntity<Boolean> deleteFoodWasteBundle(@PathVariable Long id) {
 			if(id != null){
 				boolean isDeleted = foodWasteBundleService.deleteFoodWasteBundleById(id);
 				if(isDeleted) {

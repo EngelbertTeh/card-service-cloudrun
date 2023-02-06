@@ -69,7 +69,7 @@ public class IndividualUserController {
 
     //Delete
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> deleteIndividualUser(Long id) {
+    public ResponseEntity<Boolean> deleteIndividualUser(@PathVariable Long id) {
         if(id != null){
             boolean isDeleted = individualUserService.deleteIndividualUserById(id);
             if(isDeleted) {

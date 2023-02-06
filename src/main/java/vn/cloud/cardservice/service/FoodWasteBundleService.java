@@ -1,6 +1,5 @@
 package vn.cloud.cardservice.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.cloud.cardservice.dto.InternalMessenger;
@@ -12,7 +11,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class FoodWasteBundleService {
 
         @Autowired
@@ -58,7 +56,7 @@ public class FoodWasteBundleService {
             try {
                 Optional<FoodWasteBundle> foodWasteBundleOpt = foodWasteBundleRepository.findById(foodWasteBundleOther.getId());
                 if (foodWasteBundleOpt.isPresent()) { // if such user exists
-                    FoodWasteBundle foodWasteBundleR = foodWasteBundleRepository.save(foodWasteBundleOther); // save changes
+                    FoodWasteBundle foodWasteBundleR = foodWasteBundleRepository.saveAndFlush(foodWasteBundleOther); // save changes
                     return new InternalMessenger<>(foodWasteBundleR, true);
                 } else throw new NoSuchElementException(); // will not save as new instance if it is not found in db
             } catch (Exception e) {

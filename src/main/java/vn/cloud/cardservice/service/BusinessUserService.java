@@ -1,6 +1,5 @@
 package vn.cloud.cardservice.service;
 
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.cloud.cardservice.dto.InternalMessenger;
@@ -13,7 +12,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class BusinessUserService {
 
     @Autowired
@@ -72,7 +70,7 @@ public class BusinessUserService {
         try {
             Optional<BusinessUser> businessUserOpt = businessUserRepository.findById(businessUserOther.getId());
             if(businessUserOpt.isPresent()) { // if such user exists
-                BusinessUser businessUserR = businessUserRepository.save(businessUserOther); // save changes
+                BusinessUser businessUserR = businessUserRepository.saveAndFlush(businessUserOther); // save changes
                 return new InternalMessenger<>(businessUserR,true);
             }
             else throw new NoSuchElementException(); // will not save as new instance if it is not found in db
