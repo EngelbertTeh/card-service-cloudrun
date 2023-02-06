@@ -20,14 +20,14 @@ public class BusinessUserController {
     //Create
     @PostMapping("/save")
     public ResponseEntity<BusinessUser> saveBusinessUser(@RequestBody BusinessUser businessUserOther) {
-        if(businessUserOther != null){
+        if(businessUserOther != null && businessUserOther.getId() == null){
             InternalMessenger<BusinessUser> internalMessenger = businessUserService.saveBusinessUser(businessUserOther);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.CREATED); // if data gets saved
             }
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null object to server
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null or an existing object(duplicate Id) to server
     }
 
     //Retrieve

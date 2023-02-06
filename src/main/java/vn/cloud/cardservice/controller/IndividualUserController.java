@@ -19,20 +19,20 @@ public class IndividualUserController {
 
     //Create
     @PostMapping("/save")
-    public ResponseEntity<IndividualUser> saveIndividualUser(@RequestBody IndividualUser individualUserOther) {
-        if(individualUserOther != null){
-            InternalMessenger<IndividualUser> internalMessenger = individualUserService.saveIndividualUser(individualUserOther);
+    public ResponseEntity<IndividualUser> saveIndividualUser(@RequestBody IndividualUser businessUserOther) {
+        if(businessUserOther != null && businessUserOther.getUserId() == null){
+            InternalMessenger<IndividualUser> internalMessenger = individualUserService.saveIndividualUser(businessUserOther);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.CREATED); // if data gets saved
             }
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null object to server
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null or an existing object(not new) to server
     }
 
     //Retrieve
     @GetMapping("/{id}")
-    public ResponseEntity<IndividualUser> getUserById (@PathVariable Long id) {
+    public ResponseEntity<IndividualUser> getUserByUserId (@PathVariable Long id) {
         if(id != null){
             InternalMessenger<IndividualUser> internalMessenger = individualUserService.getUserById(id);
             if(internalMessenger.isSuccess()) {
@@ -56,9 +56,9 @@ public class IndividualUserController {
 
     //Update
     @PutMapping("/update")
-    public ResponseEntity<IndividualUser> updateIndividualUser(@RequestBody IndividualUser individualUserOther) {
-        if(individualUserOther != null){
-            InternalMessenger<IndividualUser> internalMessenger = individualUserService.updateIndividualUser(individualUserOther);
+    public ResponseEntity<IndividualUser> updateIndividualUser(@RequestBody IndividualUser businessUserOther) {
+        if(businessUserOther != null){
+            InternalMessenger<IndividualUser> internalMessenger = individualUserService.updateIndividualUser(businessUserOther);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
             }
@@ -86,10 +86,10 @@ public class IndividualUserController {
         if (loginDTO != null) {
             InternalMessenger<IndividualUser> internalMessenger = individualUserService.getUserByEmail(loginDTO.getEmail());
             if (internalMessenger.isSuccess()) {
-                IndividualUser individualUserR = internalMessenger.getData();
-                boolean isAuthenticated = individualUserService.authenticate(loginDTO,individualUserR);
+                IndividualUser businessUserR = internalMessenger.getData();
+                boolean isAuthenticated = individualUserService.authenticate(loginDTO,businessUserR);
                 if(isAuthenticated) {
-                    return new ResponseEntity<>(individualUserR,HttpStatus.OK);
+                    return new ResponseEntity<>(businessUserR,HttpStatus.OK);
                 }
             }
             return new ResponseEntity<>(null,HttpStatus.OK); // status OK even if email/password wrong, to indicate to client that credentials had been checked

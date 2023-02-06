@@ -10,7 +10,7 @@ public class Food {
     private Double listDays;
     private Boolean isPendingPickup;
     private Boolean isCollected;
-    private Boolean isHalal;
+    private String isHalal;
     private Boolean isListed;
 //    private Double longitude;
 //    private Double latitude;

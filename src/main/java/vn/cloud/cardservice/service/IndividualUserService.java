@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.IndividualUser;
 import vn.cloud.cardservice.repository.IndividualUserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class IndividualUserService {
     public InternalMessenger<IndividualUser> getUserById(Long id) {
         try {
             Optional<IndividualUser> individualUserOpt =  individualUserRepository.findById(id);
-            if(individualUserOpt.isPresent()) {
+            if(individualUserOpt.isPresent() && individualUserOpt.get().getIsDeactivated() == false) {
                 return new InternalMessenger<>(individualUserOpt.get(),true);
             }
             else return new InternalMessenger<>(null,false,"element not found");
@@ -46,7 +47,7 @@ public class IndividualUserService {
     public InternalMessenger<IndividualUser> getUserByEmail(String email) {
         try {
             Optional<IndividualUser> individualUserOpt =  individualUserRepository.findByEmail(email);
-            if(individualUserOpt!=null && individualUserOpt.isPresent()) {
+            if(individualUserOpt.isPresent() && individualUserOpt.get().getIsDeactivated() == false) {
                 return new InternalMessenger<>(individualUserOpt.get(),true);
             }
             else return new InternalMessenger<>(null,false,"element not found");
@@ -59,7 +60,13 @@ public class IndividualUserService {
     public InternalMessenger<List<IndividualUser>> getAllIndividualUsers(){
         try {
             List<IndividualUser> individualUsers = individualUserRepository.findAll();
-            return new InternalMessenger<>(individualUsers,true);
+            List<IndividualUser> activeUsers = new ArrayList<>();
+            for(IndividualUser individualUser : individualUsers) {
+                if(individualUser.getIsDeactivated() == false) {
+                    activeUsers.add(individualUser);
+                }
+            }
+            return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
@@ -70,9 +77,9 @@ public class IndividualUserService {
     public InternalMessenger<IndividualUser> updateIndividualUser(IndividualUser individualUserOther) {
         try {
             Optional<IndividualUser> individualUserOpt = individualUserRepository.findById(individualUserOther.getUserId());
-            if(individualUserOpt.isPresent()) { // if such user exists
-                IndividualUser individualUserR = individualUserRepository.saveAndFlush(individualUserOther); // save changes
-                return new InternalMessenger<>(individualUserR,true);
+            if(individualUserOpt.isPresent() && individualUserOpt.get().getIsDeactivated() == false) {
+                IndividualUser individualUserS = individualUserRepository.saveAndFlush(individualUserOther); // save changes
+                return new InternalMessenger<>(individualUserS,true);
             }
             else throw new NoSuchElementException(); // will not save as new instance if it is not found in db
         } catch(Exception e) {

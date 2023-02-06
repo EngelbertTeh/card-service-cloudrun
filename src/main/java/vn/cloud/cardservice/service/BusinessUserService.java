@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.BusinessUser;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,8 +21,8 @@ public class BusinessUserService {
     //Create
     public InternalMessenger<BusinessUser> saveBusinessUser(BusinessUser businessUserOther) {
         try {
-            BusinessUser businessUserR = businessUserRepository.save(businessUserOther);
-            return new InternalMessenger<>(businessUserR,true);
+                BusinessUser businessUserR = businessUserRepository.save(businessUserOther);
+                return new InternalMessenger<>(businessUserR,true);
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
@@ -32,7 +33,7 @@ public class BusinessUserService {
     public InternalMessenger<BusinessUser> getUserById(Long id) {
         try {
             Optional<BusinessUser> businessUserOpt =  businessUserRepository.findById(id);
-            if(businessUserOpt.isPresent()) {
+            if(businessUserOpt.isPresent() && businessUserOpt.get().getIsDeactivated() == false) {
                 return new InternalMessenger<>(businessUserOpt.get(),true);
             }
             else return new InternalMessenger<>(null,false,"element not found");
@@ -45,7 +46,7 @@ public class BusinessUserService {
     public InternalMessenger<BusinessUser> getUserByEmail(String email) {
         try {
             Optional<BusinessUser> businessUserOpt =  businessUserRepository.findByEmail(email);
-            if(businessUserOpt!=null && businessUserOpt.isPresent()) {
+            if(businessUserOpt.isPresent() && businessUserOpt.get().getIsDeactivated() == false) {
                 return new InternalMessenger<>(businessUserOpt.get(),true);
             }
             else return new InternalMessenger<>(null,false,"element not found");
@@ -58,7 +59,13 @@ public class BusinessUserService {
     public InternalMessenger<List<BusinessUser>> getAllBusinessUsers(){
         try {
             List<BusinessUser> businessUsers = businessUserRepository.findAll();
-            return new InternalMessenger<>(businessUsers,true);
+            List<BusinessUser> activeUsers = new ArrayList<>();
+            for(BusinessUser businessUser : businessUsers) {
+                if(businessUser.getIsDeactivated() == false) {
+                    activeUsers.add(businessUser);
+                }
+            }
+            return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
@@ -69,9 +76,9 @@ public class BusinessUserService {
     public InternalMessenger<BusinessUser> updateBusinessUser(BusinessUser businessUserOther) {
         try {
             Optional<BusinessUser> businessUserOpt = businessUserRepository.findById(businessUserOther.getId());
-            if(businessUserOpt.isPresent()) { // if such user exists
-                BusinessUser businessUserR = businessUserRepository.saveAndFlush(businessUserOther); // save changes
-                return new InternalMessenger<>(businessUserR,true);
+            if(businessUserOpt.isPresent() && businessUserOpt.get().getIsDeactivated() == false) {
+                BusinessUser businessUserS = businessUserRepository.saveAndFlush(businessUserOther); // save changes
+                return new InternalMessenger<>(businessUserS,true);
             }
             else throw new NoSuchElementException(); // will not save as new instance if it is not found in db
         } catch(Exception e) {
