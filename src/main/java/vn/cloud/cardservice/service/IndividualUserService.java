@@ -69,7 +69,7 @@ public class IndividualUserService {
     //Update
     public InternalMessenger<IndividualUser> updateIndividualUser(IndividualUser individualUserOther) {
         try {
-            Optional<IndividualUser> individualUserOpt = individualUserRepository.findById(individualUserOther.getId());
+            Optional<IndividualUser> individualUserOpt = individualUserRepository.findById(individualUserOther.getUserId());
             if(individualUserOpt.isPresent()) { // if such user exists
                 IndividualUser individualUserR = individualUserRepository.saveAndFlush(individualUserOther); // save changes
                 return new InternalMessenger<>(individualUserR,true);

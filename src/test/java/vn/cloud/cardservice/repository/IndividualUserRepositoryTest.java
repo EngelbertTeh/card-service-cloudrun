@@ -34,7 +34,7 @@ public class IndividualUserRepositoryTest {
 		indiUser = new IndividualUser();
 		indiUser.setEmail("user@domain.com");
 		indiUser.setPassword("12345678");
-		indiUser.setName("Food Share");
+		indiUser.setUserName("Food Share");
 		indiUser.setPhone("+6587654321");
 		//indiUser.setPostcode(601234);
 		
@@ -58,8 +58,8 @@ public class IndividualUserRepositoryTest {
 		assertEquals(indiUser.getPassword(),userReturned.getPassword());
 		assertEquals(false,userReturned.getIsDeactivated());
 		assertEquals(indiUser.getCreatedAt(),userReturned.getCreatedAt());
-		assertNotNull(userReturned.getId());
-		assertEquals(indiUser.getName(),userReturned.getName());
+		assertNotNull(userReturned.getUserId());
+		assertEquals(indiUser.getUserName(),userReturned.getUserName());
 		assertEquals(indiUser.getPhone(),userReturned.getPhone());
 		//assertEquals(indiUser.getPostcode(),userReturned.getPostcode());
 		//assertEquals(0,userReturned.getRewardPts()); //user starts of with 0 points
@@ -131,32 +131,32 @@ public class IndividualUserRepositoryTest {
 	@Test
 	public void testMakeSureNamesValid() {
 		// valid names
-		indiUser.setName("Food Share Valid");
+		indiUser.setUserName("Food Share Valid");
 	    Set<ConstraintViolation<IndividualUser>> violationsNone = validator.validate(indiUser);
 	    assertEquals(0, violationsNone.size());
 	    
 	    //invalid names
-	    indiUser.setName("Assassin Tan Lee Sin");
+	    indiUser.setUserName("Assassin Tan Lee Sin");
 	    Set<ConstraintViolation<IndividualUser>> violationsNoFunnyNames = validator.validate(indiUser);
 	    assertEquals(1, violationsNoFunnyNames.size());
 	    
-	    indiUser.setName("short");
+	    indiUser.setUserName("short");
 		Set<ConstraintViolation<IndividualUser>> violationSize1 = validator.validate(indiUser);
 		assertEquals(1, violationSize1.size());
 		
-		indiUser.setName("VeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongName");
+		indiUser.setUserName("VeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLongName");
 		Set<ConstraintViolation<IndividualUser>> violationSize2 = validator.validate(indiUser);
 		assertEquals(1, violationSize2.size());
 		
-		indiUser.setName("Sonic Tan 99");
+		indiUser.setUserName("Sonic Tan 99");
 		Set<ConstraintViolation<IndividualUser>> violationPattern = validator.validate(indiUser);
 		assertEquals(1, violationPattern.size());
 	    
-	    indiUser.setName("      ");
+	    indiUser.setUserName("      ");
 	    Set<ConstraintViolation<IndividualUser>> violationsBlank1 = validator.validate(indiUser);
 	    assertEquals(1, violationsBlank1.size());
 	    
-	    indiUser.setName("");
+	    indiUser.setUserName("");
 	    Set<ConstraintViolation<IndividualUser>> violationsBlank2 = validator.validate(indiUser);
 	    assertEquals(2, violationsBlank2.size());
 	}
