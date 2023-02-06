@@ -34,6 +34,9 @@ public class IndividualUser extends BaseUserModel{
 	 @Pattern(regexp="^\\+[0-9]+[0-9]+") //country code and phone number
 	 private String phone;
 
+	private String address;
+	private String postalCode;
+
 	 @Min(value = 0)
 	 @Column(nullable=false)
 	 private Double salary = 0.00;
