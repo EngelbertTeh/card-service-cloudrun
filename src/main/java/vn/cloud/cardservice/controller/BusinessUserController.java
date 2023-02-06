@@ -57,14 +57,18 @@ public class BusinessUserController {
     //Update
     @PutMapping("/update")
     public ResponseEntity<BusinessUser> updateBusinessUser(@RequestBody BusinessUser businessUserOther) {
-        if(businessUserOther != null){
-            InternalMessenger<BusinessUser> internalMessenger = businessUserService.updateBusinessUser(businessUserOther);
-            if(internalMessenger.isSuccess()) {
-                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
-            }
-            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); // if unable to update, server problem
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
+
+
+            return new ResponseEntity<>(businessUserOther,HttpStatus.OK);
+
+//            InternalMessenger<BusinessUser> internalMessenger = businessUserService.updateBusinessUser(businessUserOther);
+//            if(internalMessenger.isSuccess()) {
+//                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
+//            }
+//            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); // if unable to update, server problem
+//        }
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
+
     }
 
     //Delete
