@@ -45,7 +45,7 @@ public class IndividualUser extends BaseUserModel{
 	 @Column(nullable=false)
 	 private String role;
 
-	 @Column(nullable=false)
+	 @Column(nullable=true)
 	 private String level;
 
 	 @Min(value=0)
@@ -58,4 +58,19 @@ public class IndividualUser extends BaseUserModel{
 	 @Column(nullable=true)
 	 private LocalDate birth;
 
+	@Override
+	public String toString() {
+		return "IndividualUser{" +
+				"userId=" + userId +
+				", userName='" + userName + '\'' +
+				", phone='" + phone + '\'' +
+				", address='" + address + '\'' +
+				", postalCode='" + postalCode + '\'' +
+				", salary=" + salary +
+				", role='" + role + '\'' +
+				", level='" + level + '\'' +
+				", points=" + points +
+				", birth=" + birth +
+				'}' + super.toString();
+	}
 }

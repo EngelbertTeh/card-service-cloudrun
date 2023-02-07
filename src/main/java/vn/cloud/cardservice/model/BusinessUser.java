@@ -32,6 +32,21 @@ public class BusinessUser extends BaseUserModel
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime closingTime;
 
+    @Override
+    public String toString() {
+        return "BusinessUser{" +
+                "id=" + id +
+                ", businessName='" + businessName + '\'' +
+                ", branch='" + branch + '\'' +
+                ", businessType='" + businessType + '\'' +
+                ", address='" + address + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                ", openingDays='" + openingDays + '\'' +
+                ", openingTime=" + openingTime +
+                ", closingTime=" + closingTime +
+                "} " + super.toString();
+    }
 
 }
 

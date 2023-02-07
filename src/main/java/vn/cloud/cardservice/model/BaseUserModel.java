@@ -1,5 +1,6 @@
 package vn.cloud.cardservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.*;
@@ -28,6 +29,7 @@ public abstract class BaseUserModel {
 	
 	
 	@NotNull
+	@JsonIgnore
 	@Column(nullable=false)
     private Boolean isDeactivated = false;
 	
@@ -35,4 +37,14 @@ public abstract class BaseUserModel {
 	@Setter(AccessLevel.NONE)
     @Column(nullable=false)
     private ZonedDateTime createdAt = ZonedDateTime.now();
+
+	@Override
+	public String toString() {
+		return "BaseUserModel{" +
+				"email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", isDeactivated=" + isDeactivated +
+				", createdAt=" + createdAt +
+				'}';
+	}
 }
