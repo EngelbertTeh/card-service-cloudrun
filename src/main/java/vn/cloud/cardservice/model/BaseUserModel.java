@@ -34,6 +34,7 @@ public abstract class BaseUserModel {
     private Boolean isDeactivated = false;
 	
 	@NotNull
+	@JsonIgnore
 	@Setter(AccessLevel.NONE)
     @Column(nullable=false)
     private ZonedDateTime createdAt = ZonedDateTime.now();

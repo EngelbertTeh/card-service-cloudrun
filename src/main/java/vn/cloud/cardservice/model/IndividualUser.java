@@ -26,17 +26,13 @@ public class IndividualUser extends BaseUserModel{
 	 @NoFunnyNames
 	 @NotBlank
 	 @Size(min = 6, max=50)
-	 @Pattern(regexp="^\\D*$") //no digits
+	 @Pattern(regexp="^[a-zA-Z0-9]+$") //no space
 	 @Column(nullable=false)
 	 private String userName;
 	 
 	 @Nullable
 	 @Pattern(regexp="^\\+[0-9]+[0-9]+") //country code and phone number
 	 private String phone;
-
-	private String address;
-	private String postalCode;
-
 	 @Min(value = 0)
 	 @Column(nullable=false)
 	 private Double salary = 0.00;
@@ -64,8 +60,6 @@ public class IndividualUser extends BaseUserModel{
 				"userId=" + userId +
 				", userName='" + userName + '\'' +
 				", phone='" + phone + '\'' +
-				", address='" + address + '\'' +
-				", postalCode='" + postalCode + '\'' +
 				", salary=" + salary +
 				", role='" + role + '\'' +
 				", level='" + level + '\'' +
