@@ -2,6 +2,8 @@ package vn.cloud.cardservice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.TimeZoneStorageType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalTime;
@@ -26,9 +28,10 @@ public class BusinessUser extends BaseUserModel
     private String postalCode;
     private String contactNumber;
     private String openingDays;
-    
+    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime openingTime;
+    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime closingTime;
 

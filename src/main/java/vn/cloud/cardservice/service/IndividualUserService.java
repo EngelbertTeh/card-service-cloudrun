@@ -60,13 +60,16 @@ public class IndividualUserService {
     public InternalMessenger<List<IndividualUser>> getAllIndividualUsers(){
         try {
             List<IndividualUser> individualUsers = individualUserRepository.findAll();
-            List<IndividualUser> activeUsers = new ArrayList<>();
-            for(IndividualUser individualUser : individualUsers) {
-                if(individualUser.getIsDeactivated() == false) {
-                    activeUsers.add(individualUser);
+            if(!individualUsers.isEmpty()) {
+                List<IndividualUser> activeUsers = new ArrayList<>();
+                for(IndividualUser individualUser : individualUsers) {
+                    if(individualUser.getIsDeactivated() == false) {
+                        activeUsers.add(individualUser);
+                    }
                 }
+                return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
             }
-            return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
+            else return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());

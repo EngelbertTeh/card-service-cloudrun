@@ -43,8 +43,11 @@ public class MessageService {
 
     public InternalMessenger<List<Message>> getAllMessages() {
         try {
-            List<Message> messageWasteBundles = messageRepository.findAll();
-            return new InternalMessenger<>(messageWasteBundles, true);
+            List<Message> messages = messageRepository.findAll();
+            if(!messages.isEmpty()) {
+                return new InternalMessenger<>(messages, true);
+            }
+            else return new InternalMessenger<>(null, false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());

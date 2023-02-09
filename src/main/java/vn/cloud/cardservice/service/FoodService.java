@@ -44,7 +44,10 @@ public class FoodService {
     public InternalMessenger<List<Food>> getAllFoods() {
         try {
             List<Food> foods = foodRepository.findAll();
-            return new InternalMessenger<>(foods, true);
+            if(!foods.isEmpty()) {
+                return new InternalMessenger<>(foods, true);
+            }
+            else return new InternalMessenger<>(null, false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
@@ -107,10 +110,10 @@ public class FoodService {
                     Food food = foodOpt.get();
                     if (food.getIsCollected() == false) { // if not collected -> false
                         food.setIsCollected(true);  // update to collected -> true
+                        foodRepository.saveAndFlush(food);
+                        return true;
                     }
-                    foodRepository.saveAndFlush(food);
-                    return true;
-                } else return false;
+                }  return false;
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;

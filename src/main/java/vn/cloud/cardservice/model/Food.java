@@ -29,6 +29,9 @@ public class Food {
     private Boolean isPendingPickup = false;
     private Boolean isCollected = false;
     private Boolean isListed = true;
+
+    @JsonProperty("img")
+    private String imageUrl;
     @JsonProperty("isHalal")
     private String halal;
     private String foodLocation;

@@ -7,6 +7,8 @@ import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.TimeZoneStorageType;
 import vn.cloud.cardservice.validator.NoFunnyNames;
 
 import java.time.ZoneId;
@@ -20,7 +22,7 @@ public abstract class BaseUserModel {
 	@NoFunnyNames
 	@Email
 	@Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9]+\\..+$")
-	@Column(unique = true, nullable = false)
+	@Column(unique = true)
 	private String email;
 	
 	@NotBlank
@@ -35,6 +37,7 @@ public abstract class BaseUserModel {
     private Boolean isDeactivated = false;
 	
 	@NotNull
+	@TimeZoneStorage(TimeZoneStorageType.NATIVE)
 	@JsonIgnore
 	@Setter(AccessLevel.NONE)
     @Column(nullable=false)

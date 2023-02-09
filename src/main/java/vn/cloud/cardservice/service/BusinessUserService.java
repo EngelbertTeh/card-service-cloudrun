@@ -59,13 +59,16 @@ public class BusinessUserService {
     public InternalMessenger<List<BusinessUser>> getAllBusinessUsers(){
         try {
             List<BusinessUser> businessUsers = businessUserRepository.findAll();
-            List<BusinessUser> activeUsers = new ArrayList<>();
-            for(BusinessUser businessUser : businessUsers) {
-                if(businessUser.getIsDeactivated() == false) {
-                    activeUsers.add(businessUser);
+            if(!businessUsers.isEmpty()) {
+                List<BusinessUser> activeUsers = new ArrayList<>();
+                for(BusinessUser businessUser : businessUsers) {
+                    if(businessUser.getIsDeactivated() == false) {
+                        activeUsers.add(businessUser);
+                    }
                 }
+                return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
             }
-            return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
+            else return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());

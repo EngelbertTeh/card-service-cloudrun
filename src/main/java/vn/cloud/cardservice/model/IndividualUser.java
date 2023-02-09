@@ -6,6 +6,8 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.TimeZoneStorageType;
 import org.springframework.format.annotation.DateTimeFormat;
 import vn.cloud.cardservice.validator.NoFunnyNames;
 
@@ -53,7 +55,7 @@ public class IndividualUser extends BaseUserModel{
 	 @Min(value=0)
 	 @Column(nullable=true)
 	 private Integer points = 0;
-
+	@TimeZoneStorage(TimeZoneStorageType.NATIVE)
 	 @DateTimeFormat(pattern = "dd/MM/yyyy")
 	 @Past
 	 @Nullable

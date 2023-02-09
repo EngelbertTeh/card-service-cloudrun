@@ -17,9 +17,9 @@ public class FoodController {
 
 	//Create
 	@PostMapping("/save")
-	public ResponseEntity<Food> saveFood(@RequestBody Food foodWasteBundleOther) {
-		if(foodWasteBundleOther != null){
-			InternalMessenger<Food> internalMessenger = foodService.saveFood(foodWasteBundleOther);
+	public ResponseEntity<Food> saveFood(@RequestBody Food foodOther) {
+		if(foodOther != null){
+			InternalMessenger<Food> internalMessenger = foodService.saveFood(foodOther);
 			if(internalMessenger.isSuccess()) {
 				return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED); // if data gets saved
 			}
@@ -54,9 +54,9 @@ public class FoodController {
 
 	//Update
 	@PutMapping("/update")
-	public ResponseEntity<Food> updateFood(@RequestBody Food foodWasteBundleOther) {
-		if(foodWasteBundleOther != null){
-			InternalMessenger<Food> internalMessenger = foodService.updateFood(foodWasteBundleOther);
+	public ResponseEntity<Food> updateFood(@RequestBody Food foodOther) {
+		if(foodOther != null){
+			InternalMessenger<Food> internalMessenger = foodService.updateFood(foodOther);
 			if(internalMessenger.isSuccess()) {
 				return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
 			}
