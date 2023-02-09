@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.Setter;
 import vn.cloud.cardservice.validator.NoFunnyNames;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Data
@@ -37,7 +38,7 @@ public abstract class BaseUserModel {
 	@JsonIgnore
 	@Setter(AccessLevel.NONE)
     @Column(nullable=false)
-    private ZonedDateTime createdAt = ZonedDateTime.now();
+    private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
 
 	@Override
 	public String toString() {

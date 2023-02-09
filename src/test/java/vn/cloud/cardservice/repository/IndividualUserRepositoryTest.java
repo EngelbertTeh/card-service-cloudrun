@@ -5,6 +5,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,8 +35,10 @@ public class IndividualUserRepositoryTest {
 		indiUser = new IndividualUser();
 		indiUser.setEmail("user@domain.com");
 		indiUser.setPassword("12345678");
-		indiUser.setUserName("Food Share");
+		indiUser.setUserName("FoodShare69");
 		indiUser.setPhone("+6587654321");
+		indiUser.setSalary(10000.00);
+		indiUser.setRole("giver");
 		//indiUser.setPostcode(601234);
 		
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -58,9 +61,10 @@ public class IndividualUserRepositoryTest {
 		assertEquals(indiUser.getPassword(),userReturned.getPassword());
 		assertEquals(false,userReturned.getIsDeactivated());
 		assertEquals(indiUser.getCreatedAt(),userReturned.getCreatedAt());
-		assertNotNull(userReturned.getUserId());
+		assertNotNull(userReturned.getId());
 		assertEquals(indiUser.getUserName(),userReturned.getUserName());
 		assertEquals(indiUser.getPhone(),userReturned.getPhone());
+		assertEquals(indiUser.getSalary(),userReturned.getSalary());
 		//assertEquals(indiUser.getPostcode(),userReturned.getPostcode());
 		//assertEquals(0,userReturned.getRewardPts()); //user starts of with 0 points
 	}
@@ -131,14 +135,14 @@ public class IndividualUserRepositoryTest {
 	@Test
 	public void testMakeSureNamesValid() {
 		// valid names
-		indiUser.setUserName("Food Share Valid");
+		indiUser.setUserName("FoodShareValid");
 	    Set<ConstraintViolation<IndividualUser>> violationsNone = validator.validate(indiUser);
 	    assertEquals(0, violationsNone.size());
 	    
 	    //invalid names
 	    indiUser.setUserName("Assassin Tan Lee Sin");
 	    Set<ConstraintViolation<IndividualUser>> violationsNoFunnyNames = validator.validate(indiUser);
-	    assertEquals(1, violationsNoFunnyNames.size());
+	    assertEquals(2, violationsNoFunnyNames.size());
 	    
 	    indiUser.setUserName("short");
 		Set<ConstraintViolation<IndividualUser>> violationSize1 = validator.validate(indiUser);
@@ -154,11 +158,11 @@ public class IndividualUserRepositoryTest {
 	    
 	    indiUser.setUserName("      ");
 	    Set<ConstraintViolation<IndividualUser>> violationsBlank1 = validator.validate(indiUser);
-	    assertEquals(1, violationsBlank1.size());
+	    assertEquals(2, violationsBlank1.size());
 	    
 	    indiUser.setUserName("");
 	    Set<ConstraintViolation<IndividualUser>> violationsBlank2 = validator.validate(indiUser);
-	    assertEquals(2, violationsBlank2.size());
+	    assertEquals(3, violationsBlank2.size());
 	}
 	
 	@Test
@@ -167,7 +171,7 @@ public class IndividualUserRepositoryTest {
 		//valid number
 		indiUser.setPhone("+6581234567");
 		Set<ConstraintViolation<IndividualUser>> violationNone = validator.validate(indiUser);
-		assertEquals(0, violationNone.size());
+		Assertions.assertEquals(0, violationNone.size());
 		
 		//invalid numbers
 		indiUser.setPhone("6581234567");

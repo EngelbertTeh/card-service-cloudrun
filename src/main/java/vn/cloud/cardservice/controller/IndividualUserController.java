@@ -20,7 +20,7 @@ public class IndividualUserController {
     //Create
     @PostMapping("/save")
     public ResponseEntity<IndividualUser> saveIndividualUser(@RequestBody IndividualUser businessUserOther) {
-        if(businessUserOther != null && businessUserOther.getUserId() == null){
+        if(businessUserOther != null && businessUserOther.getId() == null){
             InternalMessenger<IndividualUser> internalMessenger = individualUserService.saveIndividualUser(businessUserOther);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.CREATED); // if data gets saved

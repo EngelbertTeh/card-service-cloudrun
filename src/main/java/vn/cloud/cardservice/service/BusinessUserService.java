@@ -109,7 +109,10 @@ public class BusinessUserService {
 
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, BusinessUser businessUserR) {
-        return loginDTO.getEmail().equals(businessUserR.getEmail()) && loginDTO.getPassword().equals(businessUserR.getPassword());
+        String emailFromLogin = loginDTO.getEmail().toLowerCase();
+        String emailFromRepo = businessUserR.getEmail().toLowerCase();
+
+        return emailFromLogin.equals(emailFromRepo) && loginDTO.getPassword().equals(businessUserR.getPassword());
     }
 
 

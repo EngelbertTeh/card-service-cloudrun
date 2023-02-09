@@ -76,7 +76,7 @@ public class IndividualUserService {
     //Update
     public InternalMessenger<IndividualUser> updateIndividualUser(IndividualUser individualUserOther) {
         try {
-            Optional<IndividualUser> individualUserOpt = individualUserRepository.findById(individualUserOther.getUserId());
+            Optional<IndividualUser> individualUserOpt = individualUserRepository.findById(individualUserOther.getId());
             if(individualUserOpt.isPresent() && individualUserOpt.get().getIsDeactivated() == false) {
                 IndividualUser individualUserS = individualUserRepository.saveAndFlush(individualUserOther); // save changes
                 return new InternalMessenger<>(individualUserS,true);
@@ -110,7 +110,10 @@ public class IndividualUserService {
 
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, IndividualUser individualUserR) {
-        return loginDTO.getEmail().equals(individualUserR.getEmail()) && loginDTO.getPassword().equals(individualUserR.getPassword());
+        String emailFromLogin = loginDTO.getEmail().toLowerCase();
+        String emailFromRepo = individualUserR.getEmail().toLowerCase();
+
+        return emailFromLogin.equals(emailFromRepo) && loginDTO.getPassword().equals(individualUserR.getPassword());
     }
 
 }
