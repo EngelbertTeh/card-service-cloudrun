@@ -45,6 +45,8 @@ public class FoodWastePackage {
     @JsonIgnore
     private Boolean isCollected = false;
 
+    private String status;
+
     @JsonIgnore
     private Boolean isDeactivated = false;
     private String description;

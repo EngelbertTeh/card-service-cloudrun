@@ -53,23 +53,29 @@
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
 
-        @GetMapping("/get-list-pending")
-        public ResponseEntity<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages() {
-            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllNotCollectedFoodWastePackages();
+        @GetMapping("/get-list-pending/{biz_id}")
+        public ResponseEntity<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages(@PathVariable Long biz_id) {
+            if(biz_id != null){
+            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllNotCollectedFoodWastePackages(biz_id);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+        }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        @GetMapping("/get-list-history")
-        public ResponseEntity<List<FoodWastePackage>> getAllFoodWastePackagesHistory() {
-            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackagesHistory();
+        @GetMapping("/get-list-history/{biz_id}")
+        public ResponseEntity<List<FoodWastePackage>> getAllFoodWastePackagesHistory(@PathVariable Long biz_id) {
+            if(biz_id != null){
+            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackagesHistory(biz_id);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 
         //Update

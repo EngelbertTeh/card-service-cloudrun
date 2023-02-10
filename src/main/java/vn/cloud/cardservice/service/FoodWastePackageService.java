@@ -61,9 +61,9 @@ public class FoodWastePackageService {
         }
     }
 
-    public InternalMessenger<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages() {
+    public InternalMessenger<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages(Long biz_id) {
         try {
-            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
+            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findFoodWastePackageByBusinessUserId(biz_id);
             if(!foodWastePackages.isEmpty()) {
                 List<FoodWastePackage> notCollectedFoodWastePackages = new ArrayList<>();
                 for(FoodWastePackage foodWastePackage : foodWastePackages) {
@@ -71,9 +71,11 @@ public class FoodWastePackageService {
                         notCollectedFoodWastePackages.add(foodWastePackage);
                     }
                 }
-                return new InternalMessenger<>(notCollectedFoodWastePackages,true); // only return non-cancelled and not collected food waste packages
+                if(!notCollectedFoodWastePackages.isEmpty()) {
+                    return new InternalMessenger<>(notCollectedFoodWastePackages,true); // only return non-cancelled and not collected food waste packages
+                }
             }
-            else return new InternalMessenger<>(null,false,"list empty");
+             return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
@@ -81,9 +83,9 @@ public class FoodWastePackageService {
     }
 
 
-    public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesHistory() {
+    public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesHistory(Long biz_id) {
         try {
-            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
+            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findFoodWastePackageByBusinessUserId(biz_id);
             if(!foodWastePackages.isEmpty()) {
                 List<FoodWastePackage> foodWastePackagesHistory = new ArrayList<>();
                 for(FoodWastePackage foodWastePackage : foodWastePackages) {
@@ -91,9 +93,11 @@ public class FoodWastePackageService {
                         foodWastePackagesHistory.add(foodWastePackage);
                     }
                 }
-                return new InternalMessenger<>(foodWastePackagesHistory,true); // only return non-cancelled and not collected food waste packages
+                if(!foodWastePackagesHistory.isEmpty()) {
+                    return new InternalMessenger<>(foodWastePackagesHistory,true); // only return cancelled or collected food waste packages
+                }
             }
-            else return new InternalMessenger<>(null,false,"list empty");
+             return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
@@ -172,10 +176,11 @@ public Boolean updateCollectedStatus (Long id){
     try {
         Optional<FoodWastePackage> foodWastePackageOpt = foodWastePackageRepository.findById(id); // find foodWastePackage
         if (foodWastePackageOpt.isPresent()) { // check if foodWastePackage exists
-            FoodWastePackage foodWastePackage = foodWastePackageOpt.get();
-            if (foodWastePackage.getIsCollected() == false) { // if not collected -> false
-                foodWastePackage.setIsCollected(true);  // update to collected -> true
-                foodWastePackageRepository.saveAndFlush(foodWastePackage);
+            FoodWastePackage foodWastePackageR = foodWastePackageOpt.get();
+            if (foodWastePackageR.getIsCollected() == false) { // if not collected -> false
+                foodWastePackageR.setIsCollected(true);  // update to collected -> true
+                foodWastePackageR.setStatus("Collected");
+                foodWastePackageRepository.saveAndFlush(foodWastePackageR);
                 return true;
             }
         }  return false;
@@ -194,6 +199,7 @@ public Boolean updateCollectedStatus (Long id){
                 FoodWastePackage foodWastePackageR = foodWastePackageOpt.get();
                 if(foodWastePackageR.getIsDeactivated()==false) { // make sure fwp was not previously "soft deleted", if it was previously "deleted", the `isDeactivated` returns true
                     foodWastePackageR.setIsDeactivated(true); // "soft delete" the fwp by changing `isDeactivated` to true
+                    foodWastePackageR.setStatus("Cancelled");
                     foodWastePackageRepository.saveAndFlush(foodWastePackageR); // update the entity
                     return true;
                 }
