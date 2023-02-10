@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface FoodWastePackageRepository extends JpaRepository<FoodWastePackage,Long> {
     @Query("SELECT p FROM FoodWastePackage p JOIN BusinessUser b WHERE b.id = :id")
-    List<FoodWastePackage> findFoodWastePackageByBusinessUserId(@Param("id") Long id);
+    List<FoodWastePackage> findFoodWastePackagesByBusinessUserId(@Param("id") Long id);
 
 }
