@@ -53,7 +53,7 @@ public class FoodWastePackageService {
                     }
                 }
                 if (!activeFoodWastePackages.isEmpty()) {
-                    new InternalMessenger<>(activeFoodWastePackages, true); // only return non-cancelled food waste packages
+                    return new InternalMessenger<>(activeFoodWastePackages, true);
                 }
             }
              return new InternalMessenger<>(null,false,"list empty");
@@ -66,7 +66,6 @@ public class FoodWastePackageService {
     public InternalMessenger<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages(Long biz_id) {
         try {
             List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findFoodWastePackagesByBusinessUserId(biz_id);
-            System.out.println(foodWastePackages);
             if(!foodWastePackages.isEmpty()) {
                 List<FoodWastePackage> notCollectedFoodWastePackages = new ArrayList<>();
                 for(FoodWastePackage foodWastePackage : foodWastePackages) {
@@ -89,7 +88,6 @@ public class FoodWastePackageService {
     public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesHistory(Long biz_id) {
         try {
             List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findFoodWastePackagesByBusinessUserId(biz_id);
-            System.out.println(foodWastePackages);
             if(!foodWastePackages.isEmpty()) {
                 List<FoodWastePackage> foodWastePackagesHistory = new ArrayList<>();
                 for(FoodWastePackage foodWastePackage : foodWastePackages) {
