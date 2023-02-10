@@ -8,7 +8,13 @@ import vn.cloud.cardservice.model.FoodWastePackage;
 import java.util.List;
 
 public interface FoodWastePackageRepository extends JpaRepository<FoodWastePackage,Long> {
-    @Query("SELECT p FROM FoodWastePackage p JOIN BusinessUser b WHERE b.id = :id")
-    List<FoodWastePackage> findFoodWastePackagesByBusinessUserId(@Param("id") Long id);
+    @Query("SELECT fwp FROM FoodWastePackage fwp JOIN fwp.businessUser biz WHERE biz.id = :id AND fwp.isCollected = FALSE AND fwp.isDeactivated = FALSE")
+    List<FoodWastePackage> findAllNotCollectedFoodWastePackagesByBusinessUserId(@Param("id") Long id);
+
+    @Query("SELECT fwp FROM FoodWastePackage fwp JOIN fwp.businessUser biz WHERE biz.id = :id AND (fwp.isCollected  OR fwp.isDeactivated = TRUE)")
+    List<FoodWastePackage> findAllFoodWastePackagesHistoryByBusinessUserId(@Param("id") Long id);
+
+    @Query("SELECT fwp FROM FoodWastePackage fwp WHERE fwp.isDeactivated = FALSE")
+    List<FoodWastePackage> findAllActive();
 
 }

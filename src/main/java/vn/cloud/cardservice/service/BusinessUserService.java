@@ -7,7 +7,6 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.BusinessUser;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -58,15 +57,9 @@ public class BusinessUserService {
     
     public InternalMessenger<List<BusinessUser>> getAllBusinessUsers(){
         try {
-            List<BusinessUser> businessUsers = businessUserRepository.findAll();
+            List<BusinessUser> businessUsers = businessUserRepository.findAllActive();
             if(!businessUsers.isEmpty()) {
-                List<BusinessUser> activeUsers = new ArrayList<>();
-                for(BusinessUser businessUser : businessUsers) {
-                    if(businessUser.getIsDeactivated() == false) {
-                        activeUsers.add(businessUser);
-                    }
-                }
-                return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
+                return new InternalMessenger<>(businessUsers,true); // only return non-deleted users
             }
             else return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {

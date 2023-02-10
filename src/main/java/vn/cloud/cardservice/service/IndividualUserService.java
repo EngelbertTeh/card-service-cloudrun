@@ -7,7 +7,6 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.IndividualUser;
 import vn.cloud.cardservice.repository.IndividualUserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -59,15 +58,9 @@ public class IndividualUserService {
 
     public InternalMessenger<List<IndividualUser>> getAllIndividualUsers(){
         try {
-            List<IndividualUser> individualUsers = individualUserRepository.findAll();
+            List<IndividualUser> individualUsers = individualUserRepository.findAllActive();
             if(!individualUsers.isEmpty()) {
-                List<IndividualUser> activeUsers = new ArrayList<>();
-                for(IndividualUser individualUser : individualUsers) {
-                    if(individualUser.getIsDeactivated() == false) {
-                        activeUsers.add(individualUser);
-                    }
-                }
-                return new InternalMessenger<>(activeUsers,true); // only return non-deleted users
+                return new InternalMessenger<>(individualUsers,true); // only return non-deleted users
             }
             else return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {

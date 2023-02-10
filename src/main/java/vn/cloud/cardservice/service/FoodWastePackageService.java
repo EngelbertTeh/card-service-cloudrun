@@ -6,7 +6,6 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.FoodWastePackage;
 import vn.cloud.cardservice.repository.FoodWastePackageRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -44,18 +43,10 @@ public class FoodWastePackageService {
 
     public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackages() {
         try {
-            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
+            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAllActive();
             if(!foodWastePackages.isEmpty()) {
-                List<FoodWastePackage> activeFoodWastePackages = new ArrayList<>();
-                for (FoodWastePackage foodWastePackage : foodWastePackages) {
-                    if (foodWastePackage.getIsDeactivated() == false) {
-                        activeFoodWastePackages.add(foodWastePackage);
-                    }
+                    return new InternalMessenger<>(foodWastePackages, true);
                 }
-                if (!activeFoodWastePackages.isEmpty()) {
-                    return new InternalMessenger<>(activeFoodWastePackages, true);
-                }
-            }
              return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
@@ -65,18 +56,10 @@ public class FoodWastePackageService {
 
     public InternalMessenger<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages(Long biz_id) {
         try {
-            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findFoodWastePackagesByBusinessUserId(biz_id);
-            if(!foodWastePackages.isEmpty()) {
-                List<FoodWastePackage> notCollectedFoodWastePackages = new ArrayList<>();
-                for(FoodWastePackage foodWastePackage : foodWastePackages) {
-                    if(foodWastePackage.getIsCollected() == false && foodWastePackage.getIsDeactivated() == false) {
-                        notCollectedFoodWastePackages.add(foodWastePackage);
-                    }
-                }
-                if(!notCollectedFoodWastePackages.isEmpty()) {
+            List<FoodWastePackage> notCollectedFoodWastePackages = foodWastePackageRepository.findAllNotCollectedFoodWastePackagesByBusinessUserId(biz_id);
+            if(!notCollectedFoodWastePackages.isEmpty()) {
                     return new InternalMessenger<>(notCollectedFoodWastePackages,true); // only return non-cancelled and not collected food waste packages
                 }
-            }
              return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
@@ -87,18 +70,10 @@ public class FoodWastePackageService {
 
     public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesHistory(Long biz_id) {
         try {
-            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findFoodWastePackagesByBusinessUserId(biz_id);
-            if(!foodWastePackages.isEmpty()) {
-                List<FoodWastePackage> foodWastePackagesHistory = new ArrayList<>();
-                for(FoodWastePackage foodWastePackage : foodWastePackages) {
-                    if(foodWastePackage.getIsCollected() == true || foodWastePackage.getIsDeactivated() == true) {
-                        foodWastePackagesHistory.add(foodWastePackage);
-                    }
-                }
-                if(!foodWastePackagesHistory.isEmpty()) {
+            List<FoodWastePackage> foodWastePackagesHistory = foodWastePackageRepository.findAllFoodWastePackagesHistoryByBusinessUserId(biz_id);
+            if(!foodWastePackagesHistory.isEmpty()) {
                     return new InternalMessenger<>(foodWastePackagesHistory,true); // only return cancelled or collected food waste packages
                 }
-            }
              return new InternalMessenger<>(null,false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
