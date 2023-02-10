@@ -8,7 +8,7 @@ import vn.cloud.cardservice.model.FoodWastePackage;
 import java.util.List;
 
 public interface FoodWastePackageRepository extends JpaRepository<FoodWastePackage,Long> {
-    @Query("SELECT p FROM FoodWastePackage p WHERE p.id = :id")
+    @Query("SELECT p FROM FoodWastePackage p JOIN BusinessUser b WHERE b.id = :id")
     List<FoodWastePackage> findFoodWastePackageByBusinessUserId(@Param("id") Long id);
 
 }
