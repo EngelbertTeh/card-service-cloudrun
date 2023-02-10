@@ -6,6 +6,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.FoodWastePackage;
 import vn.cloud.cardservice.repository.FoodWastePackageRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -42,6 +43,25 @@ public class FoodWastePackageService {
 
 
     public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackages() {
+        try {
+            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
+            if(!foodWastePackages.isEmpty()) {
+                List<FoodWastePackage> activeFoodWastePackages = new ArrayList<>();
+                for(FoodWastePackage foodWastePackage : foodWastePackages) {
+                    if(foodWastePackage.getIsDeactivated() == false) {
+                        activeFoodWastePackages.add(foodWastePackage);
+                    }
+                }
+                return new InternalMessenger<>(activeFoodWastePackages,true); // only return non-cancelled food waste packages
+            }
+            else return new InternalMessenger<>(null,false,"list empty");
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new InternalMessenger<>(null,false,e.toString());
+        }
+    }
+
+    public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesWithDeleted() {
         try {
             List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
             if(!foodWastePackages.isEmpty()) {
@@ -141,20 +161,22 @@ public Boolean updateCollectedStatus (Long id){
 
 
     //Delete
-    public Boolean deleteFoodWastePackageById(Long id) { // hard delete, foodWastePackage waste data is considered not so valuable
+    public Boolean deleteFoodWastePackageById(Long id) { // soft delete
         try {
             Optional<FoodWastePackage> foodWastePackageOpt = foodWastePackageRepository.findById(id);
-            if (foodWastePackageOpt.isPresent()) { // make sure bundle exists
+            if(foodWastePackageOpt.isPresent()) { // make sure such food waste package exists
                 FoodWastePackage foodWastePackageR = foodWastePackageOpt.get();
-                foodWastePackageRepository.delete(foodWastePackageR);
-                return true;
+                if(foodWastePackageR.getIsDeactivated()==false) { // make sure fwp was not previously "soft deleted", if it was previously "deleted", the `isDeactivated` returns true
+                    foodWastePackageR.setIsDeactivated(true); // "soft delete" the fwp by changing `isDeactivated` to true
+                    foodWastePackageRepository.saveAndFlush(foodWastePackageR); // update the entity
+                    return true;
+                }
             }
             return false;
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-
     
 }

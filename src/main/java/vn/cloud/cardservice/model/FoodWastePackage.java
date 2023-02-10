@@ -43,6 +43,7 @@ public class FoodWastePackage {
 
     private Boolean isCollected = false;
 
+    private Boolean isDeactivated = false;
     private String description;
 
     private String itemList;

@@ -98,7 +98,7 @@ public class BusinessUserService {
                 BusinessUser businessUserR = businessUserOpt.get();
                 if(businessUserR.getIsDeactivated()==false) { // make sure user was not previously "soft deleted", if it was previously "deleted", the `isDeactivated` returns true
                     businessUserR.setIsDeactivated(true); // "soft delete" the user by changing `isDeactivated` to true
-                    BusinessUser businessUserS = businessUserRepository.saveAndFlush(businessUserR); // update the entity
+                    businessUserRepository.saveAndFlush(businessUserR); // update the entity
                     return true;
                 }
             }

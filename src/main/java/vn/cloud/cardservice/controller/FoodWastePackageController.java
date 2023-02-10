@@ -45,13 +45,23 @@
         }
 
         @GetMapping("/get-list")
-        public ResponseEntity<List<FoodWastePackage>> getAllFoods() {
+        public ResponseEntity<List<FoodWastePackage>> getAllFoodWastePackages() {
             InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackages();
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
+
+        @GetMapping("/get-list-with-deleted")
+        public ResponseEntity<List<FoodWastePackage>> getAllFoodsWithDeleted() {
+            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackagesWithDeleted();
+            if(internalMessenger.isSuccess()) {
+                return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
+            }
+            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+        }
+
 
         //Update
         @PutMapping("/update")

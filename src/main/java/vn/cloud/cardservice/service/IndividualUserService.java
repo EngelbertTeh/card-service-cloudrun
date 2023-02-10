@@ -99,7 +99,7 @@ public class IndividualUserService {
                 IndividualUser individualUserR = individualUserOpt.get();
                 if(individualUserR.getIsDeactivated()==false) { // make sure user was not previously "soft deleted", if it was previously "deleted", the `isDeactivated` returns true
                     individualUserR.setIsDeactivated(true); // "soft delete" the user by changing `isDeactivated` to true
-                    IndividualUser individualUserS = individualUserRepository.saveAndFlush(individualUserR); // update the entity
+                    individualUserRepository.saveAndFlush(individualUserR); // update the entity
                     return true;
                 }
             }
