@@ -61,16 +61,42 @@ public class FoodWastePackageService {
         }
     }
 
-    public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesWithDeleted() {
+    public InternalMessenger<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages() {
         try {
             List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
             if(!foodWastePackages.isEmpty()) {
-                return new InternalMessenger<>(foodWastePackages, true);
+                List<FoodWastePackage> notCollectedFoodWastePackages = new ArrayList<>();
+                for(FoodWastePackage foodWastePackage : foodWastePackages) {
+                    if(foodWastePackage.getIsCollected() == false && foodWastePackage.getIsDeactivated() == false) {
+                        notCollectedFoodWastePackages.add(foodWastePackage);
+                    }
+                }
+                return new InternalMessenger<>(notCollectedFoodWastePackages,true); // only return non-cancelled and not collected food waste packages
             }
-            else return new InternalMessenger<>(null, false, "list empty");
-        } catch (Exception e) {
+            else return new InternalMessenger<>(null,false,"list empty");
+        } catch(Exception e) {
             e.printStackTrace();
-            return new InternalMessenger<>(null, false, e.toString());
+            return new InternalMessenger<>(null,false,e.toString());
+        }
+    }
+
+
+    public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesHistory() {
+        try {
+            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
+            if(!foodWastePackages.isEmpty()) {
+                List<FoodWastePackage> foodWastePackagesHistory = new ArrayList<>();
+                for(FoodWastePackage foodWastePackage : foodWastePackages) {
+                    if(foodWastePackage.getIsCollected() == true || foodWastePackage.getIsDeactivated() == true) {
+                        foodWastePackagesHistory.add(foodWastePackage);
+                    }
+                }
+                return new InternalMessenger<>(foodWastePackagesHistory,true); // only return non-cancelled and not collected food waste packages
+            }
+            else return new InternalMessenger<>(null,false,"list empty");
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new InternalMessenger<>(null,false,e.toString());
         }
     }
 

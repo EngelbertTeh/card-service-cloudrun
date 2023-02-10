@@ -26,8 +26,12 @@ public class Food {
     private String title;
     private String description;
     private Double listDays;
+
+    @JsonIgnore
     private Boolean isPendingPickup = false;
+    @JsonIgnore
     private Boolean isCollected = false;
+    @JsonIgnore
     private Boolean isListed = true;
 
     @JsonProperty("img")

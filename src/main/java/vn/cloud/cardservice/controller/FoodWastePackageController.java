@@ -53,9 +53,18 @@
             else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
         }
 
-        @GetMapping("/get-list-with-deleted")
-        public ResponseEntity<List<FoodWastePackage>> getAllFoodsWithDeleted() {
-            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackagesWithDeleted();
+        @GetMapping("/get-list-pending")
+        public ResponseEntity<List<FoodWastePackage>> getAllNotCollectedFoodWastePackages() {
+            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllNotCollectedFoodWastePackages();
+            if(internalMessenger.isSuccess()) {
+                return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
+            }
+            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+        }
+
+        @GetMapping("/get-list-history")
+        public ResponseEntity<List<FoodWastePackage>> getAllFoodWastePackagesHistory() {
+            InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackagesHistory();
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }

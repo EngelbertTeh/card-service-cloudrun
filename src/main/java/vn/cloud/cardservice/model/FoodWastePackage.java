@@ -1,5 +1,6 @@
 package vn.cloud.cardservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -41,8 +42,10 @@ public class FoodWastePackage {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDate pickUpDate;
 
+    @JsonIgnore
     private Boolean isCollected = false;
 
+    @JsonIgnore
     private Boolean isDeactivated = false;
     private String description;
 
