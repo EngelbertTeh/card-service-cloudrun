@@ -19,9 +19,9 @@ public class IndividualUserController {
 
     //Create
     @PostMapping("/save")
-    public ResponseEntity<IndividualUser> saveIndividualUser(@RequestBody IndividualUser businessUserOther) {
-        if(businessUserOther != null && businessUserOther.getId() == null){
-            InternalMessenger<IndividualUser> internalMessenger = individualUserService.saveIndividualUser(businessUserOther);
+    public ResponseEntity<IndividualUser> saveIndividualUser(@RequestBody IndividualUser individualUserOther) {
+        if(individualUserOther != null && individualUserOther.getId() == null){
+            InternalMessenger<IndividualUser> internalMessenger = individualUserService.saveIndividualUser(individualUserOther);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.CREATED); // if data gets saved
             }
@@ -56,9 +56,9 @@ public class IndividualUserController {
 
     //Update
     @PutMapping("/update")
-    public ResponseEntity<IndividualUser> updateIndividualUser(@RequestBody IndividualUser businessUserOther) {
-        if(businessUserOther != null){
-            InternalMessenger<IndividualUser> internalMessenger = individualUserService.updateIndividualUser(businessUserOther);
+    public ResponseEntity<IndividualUser> updateIndividualUser(@RequestBody IndividualUser individualUserOther) {
+        if(individualUserOther != null){
+            InternalMessenger<IndividualUser> internalMessenger = individualUserService.updateIndividualUser(individualUserOther);
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
             }
@@ -86,10 +86,10 @@ public class IndividualUserController {
         if (loginDTO != null) {
             InternalMessenger<IndividualUser> internalMessenger = individualUserService.getUserByEmail(loginDTO.getEmail());
             if (internalMessenger.isSuccess()) {
-                IndividualUser businessUserR = internalMessenger.getData();
-                boolean isAuthenticated = individualUserService.authenticate(loginDTO,businessUserR);
+                IndividualUser individualUserR = internalMessenger.getData();
+                boolean isAuthenticated = individualUserService.authenticate(loginDTO,individualUserR);
                 if(isAuthenticated) {
-                    return new ResponseEntity<>(businessUserR,HttpStatus.OK);
+                    return new ResponseEntity<>(individualUserR,HttpStatus.OK);
                 }
             }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
