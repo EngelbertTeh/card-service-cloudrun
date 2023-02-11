@@ -15,13 +15,16 @@ import java.util.Optional;
 public class IndividualUserService {
 
     @Autowired
+    SecurityService<IndividualUser> securityService;
+    @Autowired
     IndividualUserRepository individualUserRepository;
 
 
     //Create
     public InternalMessenger<IndividualUser> saveIndividualUser(IndividualUser individualUserOther) {
         try {
-            IndividualUser individualUserR = individualUserRepository.save(individualUserOther);
+            IndividualUser individualUserPasswordEncrypted = securityService.encryptPassword(individualUserOther);
+            IndividualUser individualUserR = individualUserRepository.save(individualUserPasswordEncrypted);
             return new InternalMessenger<>(individualUserR,true);
         } catch(Exception e) {
             e.printStackTrace();
@@ -106,10 +109,7 @@ public class IndividualUserService {
 
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, IndividualUser individualUserR) {
-        String emailFromLogin = loginDTO.getEmail().toLowerCase();
-        String emailFromRepo = individualUserR.getEmail().toLowerCase();
-
-        return emailFromLogin.equals(emailFromRepo) && loginDTO.getPassword().equals(individualUserR.getPassword());
+        return securityService.authenticate(loginDTO,individualUserR);
     }
 
 }

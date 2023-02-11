@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.BusinessUser;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
 
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -15,12 +16,15 @@ import java.util.Optional;
 public class BusinessUserService {
 
     @Autowired
+    SecurityService<BusinessUser> securityService;
+    @Autowired
     BusinessUserRepository businessUserRepository;
 
     //Create
     public InternalMessenger<BusinessUser> saveBusinessUser(BusinessUser businessUserOther) {
         try {
-                BusinessUser businessUserR = businessUserRepository.save(businessUserOther);
+                BusinessUser businessUserPasswordEncrypted = securityService.encryptPassword(businessUserOther);
+                BusinessUser businessUserR = businessUserRepository.save(businessUserPasswordEncrypted);
                 return new InternalMessenger<>(businessUserR,true);
         } catch(Exception e) {
             e.printStackTrace();
@@ -105,10 +109,7 @@ public class BusinessUserService {
 
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, BusinessUser businessUserR) {
-        String emailFromLogin = loginDTO.getEmail().toLowerCase();
-        String emailFromRepo = businessUserR.getEmail().toLowerCase();
-
-        return emailFromLogin.equals(emailFromRepo) && loginDTO.getPassword().equals(businessUserR.getPassword());
+        return securityService.authenticate(loginDTO,businessUserR);
     }
 
 

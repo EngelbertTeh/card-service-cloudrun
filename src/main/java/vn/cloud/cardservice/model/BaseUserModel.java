@@ -26,7 +26,7 @@ public abstract class BaseUserModel {
 	private String email;
 	
 	@NotBlank
-    @Size(min = 8, max = 30)
+    @Size(min = 8, max = 255)
 	@Column(nullable=false)
     private String password;
 	

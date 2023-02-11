@@ -92,7 +92,7 @@ public class BusinessUserController {
                     return new ResponseEntity<>(businessUserR,HttpStatus.OK);
                 }
             }
-            return new ResponseEntity<>(null,HttpStatus.OK); // status OK even if email/password wrong, to indicate to client that credentials had been checked
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
