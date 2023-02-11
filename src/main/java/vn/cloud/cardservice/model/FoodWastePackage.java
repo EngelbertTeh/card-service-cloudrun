@@ -1,8 +1,8 @@
 package vn.cloud.cardservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -32,12 +32,12 @@ public class FoodWastePackage {
 
     private Integer quantity;
 
-    @FutureOrPresent
+
     private LocalTime startTime;
 
-    @Future
     private LocalTime endTime;
 
+    @FutureOrPresent
     @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDate pickUpDate;
@@ -55,6 +55,7 @@ public class FoodWastePackage {
 
     private String category;
 
+    @JsonProperty("business")
     @ManyToOne
     private BusinessUser businessUser;
 
