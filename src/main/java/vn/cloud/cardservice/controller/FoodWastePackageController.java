@@ -51,7 +51,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(new ArrayList<FoodWastePackage>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
 
         @GetMapping("/get-list-pending/{biz_id}")
@@ -61,7 +61,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(new ArrayList<FoodWastePackage>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -73,7 +73,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
+            else return new ResponseEntity<>(new ArrayList<FoodWastePackage>(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
