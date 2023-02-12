@@ -31,7 +31,7 @@
         }
 
         //Retrieve
-        @GetMapping("/{id}")
+        @GetMapping("/retrieve/{id}")
         public ResponseEntity<FoodWastePackage> getFoodById (@PathVariable Long id) {
             if(id != null){
                 InternalMessenger<FoodWastePackage> internalMessenger = foodWastePackageService.getFoodWastePackageById(id);
@@ -92,6 +92,32 @@
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
         }
 
+        @PutMapping("/update/collected/{id}")
+        public ResponseEntity<FoodWastePackage> updateCollectedStatus(@PathVariable Long id) {
+            if(id != null){
+                InternalMessenger<FoodWastePackage> internalMessenger = foodWastePackageService.updateCollectedStatusById(id);
+                if(internalMessenger.isSuccess()) {
+                    return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
+                }
+                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        @PutMapping("/update/cancelled/{id}")
+        public ResponseEntity<FoodWastePackage> cancelFoodWastePackage(@PathVariable Long id) {
+            if(id != null){
+                InternalMessenger<FoodWastePackage> internalMessenger = foodWastePackageService.cancelFoodWastePackageById(id);
+                if(internalMessenger.isSuccess()) {
+                    return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
+                }
+                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
+
 //        @PutMapping("/update/pickup-status/{id}")
 //        public ResponseEntity<Boolean> togglePickupStatus(@PathVariable Long id) {
 //            if(id != null){
@@ -116,21 +142,11 @@
 //            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //        }
 //
-        @PutMapping("/update/status/{id}")
-        public ResponseEntity<Boolean> updateCollectedStatus(@PathVariable Long id) {
-            if(id != null){
-                boolean isCollected = foodWastePackageService.updateCollectedStatus(id);
-                if(isCollected) {
-                    return new ResponseEntity<>(true,HttpStatus.OK);
-                }
-                else return new ResponseEntity<>(false,HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+
 
         //Delete
-        @DeleteMapping("/delete/{id}")
-        public ResponseEntity<Boolean> deleteFood(@PathVariable Long id) {
+        @DeleteMapping("/history/remove/{id}")
+        public ResponseEntity<Boolean> deleteFoodWastePackage(@PathVariable Long id) {
             if(id != null){
                 boolean isDeleted = foodWastePackageService.deleteFoodWastePackageById(id);
                 if(isDeleted) {
@@ -140,4 +156,17 @@
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        @DeleteMapping("/history/remove-all/{id}")
+        public ResponseEntity<Boolean> deleteAllHistoryById(@PathVariable Long id) {
+            if(id != null){
+                boolean isAllDeleted = foodWastePackageService.deleteAllHistoryById(id);
+                if(isAllDeleted) {
+                    return new ResponseEntity<>(true,HttpStatus.OK);
+                }
+                else return new ResponseEntity<>(false,HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
