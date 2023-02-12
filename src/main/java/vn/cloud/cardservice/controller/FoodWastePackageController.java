@@ -8,6 +8,7 @@
     import vn.cloud.cardservice.model.FoodWastePackage;
     import vn.cloud.cardservice.service.FoodWastePackageService;
 
+    import java.util.ArrayList;
     import java.util.List;
 
     @RestController
@@ -50,7 +51,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
 
         @GetMapping("/get-list-pending/{biz_id}")
@@ -60,7 +61,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -72,7 +73,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
