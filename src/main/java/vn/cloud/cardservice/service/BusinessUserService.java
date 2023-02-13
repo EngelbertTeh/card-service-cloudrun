@@ -23,7 +23,7 @@ public class BusinessUserService {
     public InternalMessenger<BusinessUser> saveBusinessUser(BusinessUser businessUserOther) {
         try {
                 BusinessUser businessUserPasswordEncrypted = securityService.encryptPassword(businessUserOther);
-                BusinessUser businessUserR = businessUserRepository.save(businessUserPasswordEncrypted);
+                BusinessUser businessUserR = businessUserRepository.saveAndFlush(businessUserPasswordEncrypted);
                 return new InternalMessenger<>(businessUserR,true);
         } catch(Exception e) {
             e.printStackTrace();

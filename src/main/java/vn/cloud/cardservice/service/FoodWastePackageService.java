@@ -20,7 +20,7 @@ public class FoodWastePackageService {
     //Create
     public InternalMessenger<FoodWastePackage> saveFoodWastePackage(FoodWastePackage foodWastePackageOther) {
         try {
-            FoodWastePackage foodWastePackageR = foodWastePackageRepository.save(foodWastePackageOther);
+            FoodWastePackage foodWastePackageR = foodWastePackageRepository.saveAndFlush(foodWastePackageOther);
             return new InternalMessenger<>(foodWastePackageR, true);
         } catch (Exception e) {
             e.printStackTrace();

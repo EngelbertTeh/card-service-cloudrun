@@ -24,7 +24,7 @@ public class IndividualUserService {
     public InternalMessenger<IndividualUser> saveIndividualUser(IndividualUser individualUserOther) {
         try {
             IndividualUser individualUserPasswordEncrypted = securityService.encryptPassword(individualUserOther);
-            IndividualUser individualUserR = individualUserRepository.save(individualUserPasswordEncrypted);
+            IndividualUser individualUserR = individualUserRepository.saveAndFlush(individualUserPasswordEncrypted);
             return new InternalMessenger<>(individualUserR,true);
         } catch(Exception e) {
             e.printStackTrace();

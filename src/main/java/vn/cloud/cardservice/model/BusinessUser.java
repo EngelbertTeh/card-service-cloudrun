@@ -1,7 +1,9 @@
 package vn.cloud.cardservice.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.TimeZoneStorage;
 import org.hibernate.annotations.TimeZoneStorageType;
@@ -41,8 +43,17 @@ public class BusinessUser extends BaseUserModel
     @NotBlank
     @Column(nullable=false)
     private String address;
+
+    @NotBlank
+    @Column(nullable=false)
     private String postalCode;
+
+    @Nullable
+    @Pattern(regexp="^\\+[0-9]+[0-9]+") //country code and phone number
     private String contactNumber;
+
+    @NotBlank
+    @Column(nullable=false)
     private String openingDays;
     @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)

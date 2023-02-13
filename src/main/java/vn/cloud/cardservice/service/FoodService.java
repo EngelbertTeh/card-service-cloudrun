@@ -20,7 +20,7 @@ public class FoodService {
     //Create
     public InternalMessenger<Food> saveFood(Food foodOther) {
         try {
-            Food foodR = foodRepository.save(foodOther);
+            Food foodR = foodRepository.saveAndFlush(foodOther);
             return new InternalMessenger<>(foodR, true);
         } catch (Exception e) {
             e.printStackTrace();

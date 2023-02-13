@@ -19,7 +19,7 @@ public class MessageService {
     //Create
     public InternalMessenger<Message> saveMessage(Message messageOther) {
         try {
-            Message messageWasteBundleR = messageRepository.save(messageOther);
+            Message messageWasteBundleR = messageRepository.saveAndFlush(messageOther);
             return new InternalMessenger<>(messageWasteBundleR, true);
         } catch (Exception e) {
             e.printStackTrace();
