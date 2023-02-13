@@ -51,7 +51,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<FoodWastePackage>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
 
         @GetMapping("/get-list-pending/{biz_id}")
@@ -61,7 +61,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<FoodWastePackage>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -73,7 +73,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<FoodWastePackage>(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
+            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -157,10 +157,10 @@
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        @DeleteMapping("/history/remove-all/{id}")
-        public ResponseEntity<Boolean> deleteAllHistoryById(@PathVariable Long id) {
-            if(id != null){
-                boolean isAllDeleted = foodWastePackageService.deleteAllHistoryById(id);
+        @DeleteMapping("/history/remove-all/{biz_id}")
+        public ResponseEntity<Boolean> deleteAllHistoryById(@PathVariable Long biz_id) {
+            if(biz_id != null){
+                boolean isAllDeleted = foodWastePackageService.deleteAllHistoryByBizId(biz_id);
                 if(isAllDeleted) {
                     return new ResponseEntity<>(true,HttpStatus.OK);
                 }

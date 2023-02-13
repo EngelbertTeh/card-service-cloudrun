@@ -207,9 +207,9 @@ public class FoodWastePackageService {
 
 
     @Transactional
-    public Boolean deleteAllHistoryById(Long id) {
+    public Boolean deleteAllHistoryByBizId(Long biz_id) { // hard delete
         try {
-            List<FoodWastePackage> foodWastePackagesHistoryList = foodWastePackageRepository.findAllFoodWastePackagesHistoryByBusinessUserId(id);
+            List<FoodWastePackage> foodWastePackagesHistoryList = foodWastePackageRepository.findAllFoodWastePackagesHistoryByBusinessUserId(biz_id);
             if (!foodWastePackagesHistoryList.isEmpty()) { // make sure list not empty
                 for(FoodWastePackage foodWastePackage : foodWastePackagesHistoryList) {
                     foodWastePackageRepository.delete(foodWastePackage);  // one by one delete, all items must be deleted else roll back if something happen in between
