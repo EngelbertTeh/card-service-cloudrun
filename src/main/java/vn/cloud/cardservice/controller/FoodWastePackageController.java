@@ -20,7 +20,7 @@
         //Create
         @PostMapping("/save")
         public ResponseEntity<FoodWastePackage> saveFood(@RequestBody FoodWastePackage foodWastePackageOther) {
-            if(foodWastePackageOther != null){
+            if(foodWastePackageOther != null && foodWastePackageOther.getId() == null){
                 InternalMessenger<FoodWastePackage> internalMessenger = foodWastePackageService.saveFoodWastePackage(foodWastePackageOther);
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED); // if data gets saved

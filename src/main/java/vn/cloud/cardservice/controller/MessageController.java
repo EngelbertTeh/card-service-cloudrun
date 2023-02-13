@@ -19,7 +19,7 @@
             //Create
             @PostMapping("/save")
             public ResponseEntity<Message> saveMessage(@RequestBody Message messageWasteBundleOther) {
-                if(messageWasteBundleOther != null){
+                if(messageWasteBundleOther != null && messageWasteBundleOther.getId() == null){
                     InternalMessenger<Message> internalMessenger = messageService.saveMessage(messageWasteBundleOther);
                     if(internalMessenger.isSuccess()) {
                         return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED); // if data gets saved
