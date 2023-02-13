@@ -27,11 +27,11 @@ public class Food {
     private String description;
     private Double listDays;
 
-    @JsonIgnore
+
     private Boolean isPendingPickup = false;
-    @JsonIgnore
+
     private Boolean isCollected = false;
-    @JsonIgnore
+
     private Boolean isListed = true;
 
     @JsonProperty("img")
@@ -41,6 +41,8 @@ public class Food {
     private String foodLocation;
     private Double Longitude;
     private Double Latitude;
+
+    private Long requestId;
 
     @JsonProperty("publisher")
     @ManyToOne
