@@ -4,6 +4,7 @@
 	import org.springframework.http.HttpStatus;
 	import org.springframework.http.ResponseEntity;
 	import org.springframework.web.bind.annotation.*;
+	import vn.cloud.cardservice.dto.CriteriaDTO;
 	import vn.cloud.cardservice.dto.InternalMessenger;
 	import vn.cloud.cardservice.model.Food;
 	import vn.cloud.cardservice.service.FoodService;
@@ -51,6 +52,24 @@ public class FoodController {
 		}
 		else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
 	}
+	@PostMapping("/criteria")
+	public ResponseEntity<List<Food>> getFoodByCriteria(@RequestBody CriteriaDTO criteriaDTO) {
+		InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByCriteria(criteriaDTO);
+		if(internalMessenger.isSuccess()) {
+			return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
+		}
+		else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/hnh")
+	public ResponseEntity<List<Food>> getFoodsByHalalStatus(@RequestBody CriteriaDTO criteriaDTO) {
+		InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByHalalStatus(criteriaDTO);
+		if(internalMessenger.isSuccess()) {
+			return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
+		}
+		else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+	}
+
 
 	//Update
 	@PutMapping("/update")

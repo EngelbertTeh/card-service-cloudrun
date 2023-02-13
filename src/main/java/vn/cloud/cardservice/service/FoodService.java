@@ -2,6 +2,7 @@ package vn.cloud.cardservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.cloud.cardservice.dto.CriteriaDTO;
 import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.Food;
 import vn.cloud.cardservice.repository.FoodRepository;
@@ -53,6 +54,35 @@ public class FoodService {
             return new InternalMessenger<>(null, false, e.toString());
         }
     }
+
+    public InternalMessenger<List<Food>> getFoodsByCriteria(CriteriaDTO criteriaDTO) {
+        try {
+            List<Food> foods = foodRepository.findAllByCriteria(criteriaDTO.getTitle().toLowerCase().trim(),criteriaDTO.getHalal().toLowerCase().trim());
+            if(!foods.isEmpty()) {
+                return new InternalMessenger<>(foods, true);
+            }
+            else return new InternalMessenger<>(null, false, "list empty");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new InternalMessenger<>(null, false, e.toString());
+        }
+    }
+
+    public InternalMessenger<List<Food>> getFoodsByHalalStatus(CriteriaDTO criteriaDTO) {
+        try {
+            List<Food> foods = foodRepository.findAllByHalalStatus(criteriaDTO.getHalal().toLowerCase().trim());
+            if(!foods.isEmpty()) {
+                return new InternalMessenger<>(foods, true);
+            }
+            else return new InternalMessenger<>(null, false, "list empty");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new InternalMessenger<>(null, false, e.toString());
+        }
+    }
+
+
+
 
     //Update
     public InternalMessenger<Food> updateFood(Food foodOther) {
