@@ -24,11 +24,11 @@ public class FoodWasteItem implements Serializable
 
     private String category;
 
-    private int period;
+    private Integer period;
 
     private String manufacturer;
 
-    private Float weight;
+    private Double weight;
 
     @JsonProperty("business")
     @ManyToOne
