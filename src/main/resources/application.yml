@@ -6,11 +6,11 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql:///${DB_DATABASE:postgres}
     username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:foodfood123!}
+    password: ${DB_PASSWORD:super123!}
     hikari:
       data-source-properties:
         socketFactory: com.google.cloud.sql.postgres.SocketFactory
-        cloudSqlInstance: ${DB_CLOUD_SQL_INSTANCE:card-service-dev-376619:asia-southeast2:foodshare-db}
+        cloudSqlInstance: ${DB_CLOUD_SQL_INSTANCE:card-service-dev-376619:asia-southeast2:super-db}
   jpa:
     hibernate:
       ddl-auto: update
