@@ -49,17 +49,16 @@ public class IndividualUser extends BaseUserModel{
 	 @Column(nullable=false)
 	 private String role;
 
-	 @Column(nullable=true)
+	 @Nullable
 	 private String level;
 
+	 @Nullable
 	 @Min(value=0)
-	 @Column(nullable=true)
 	 private Integer points = 0;
 	@TimeZoneStorage(TimeZoneStorageType.NATIVE)
 	 @DateTimeFormat(pattern = "dd/MM/yyyy")
 	 @Past
 	 @Nullable
-	 @Column(nullable=true)
 	 private LocalDate birth;
 
 }

@@ -8,6 +8,7 @@
 	import vn.cloud.cardservice.dto.InternalMessenger;
 	import vn.cloud.cardservice.model.Food;
 	import vn.cloud.cardservice.service.FoodService;
+
 	import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class FoodController {
 			if(internalMessenger.isSuccess()) {
 				return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED); // if data gets saved
 			}
-			else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
+			else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null object to server
 	}
@@ -38,38 +39,62 @@ public class FoodController {
 				return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
 			}
 			else if(internalMessenger.getErrorMessage().contains("element not found")) {
-				return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+				return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
-	@GetMapping("/get-list")
+	@GetMapping("/get-all")
 	public ResponseEntity<List<Food>> getAllFoods() {
 		InternalMessenger<List<Food>> internalMessenger = foodService.getAllFoods();
 		if(internalMessenger.isSuccess()) {
 			return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
 		}
-		else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+		else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
 	}
-	@PostMapping("/criteria")
+	@PostMapping("/get-list/criteria")
 	public ResponseEntity<List<Food>> getFoodByCriteria(@RequestBody CriteriaDTO criteriaDTO) {
 		InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByCriteria(criteriaDTO);
 		if(internalMessenger.isSuccess()) {
 			return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
 		}
-		else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+		else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
 	}
 
-	@PostMapping("/hnh")
+
+	@PostMapping("/get-list/hnh")
 	public ResponseEntity<List<Food>> getFoodsByHalalStatus(@RequestBody CriteriaDTO criteriaDTO) {
 		InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByHalalStatus(criteriaDTO);
 		if(internalMessenger.isSuccess()) {
 			return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
 		}
-		else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+		else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
 	}
 
+	@GetMapping("/get-list/collected/{ind_id}")
+	public ResponseEntity<List<Food>> getCollectedFoodsByIndId(@PathVariable Long ind_id) {
+		if(ind_id != null){
+			InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByIndIdAndCollectedStatus(ind_id,true);
+			if(internalMessenger.isSuccess()) {
+				return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
+			}
+			else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+
+	@GetMapping("/get-list/x-collected/{ind_id}")
+	public ResponseEntity<List<Food>> getNotCollectedFoodsByIndId(@PathVariable Long ind_id) {
+		if(ind_id != null){
+			InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByIndIdAndCollectedStatus(ind_id,false);
+			if(internalMessenger.isSuccess()) {
+				return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
+			}
+			else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 
 	//Update
 	@PutMapping("/update")
@@ -79,7 +104,7 @@ public class FoodController {
 			if(internalMessenger.isSuccess()) {
 				return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
 			}
-			else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); // if unable to update, server problem
+			else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); // if unable to update, server problem
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
 	}

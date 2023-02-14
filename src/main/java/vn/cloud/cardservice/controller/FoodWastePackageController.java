@@ -8,7 +8,6 @@
     import vn.cloud.cardservice.model.FoodWastePackage;
     import vn.cloud.cardservice.service.FoodWastePackageService;
 
-    import java.util.ArrayList;
     import java.util.List;
 
     @RestController
@@ -19,39 +18,39 @@
 
         //Create
         @PostMapping("/save")
-        public ResponseEntity<FoodWastePackage> saveFood(@RequestBody FoodWastePackage foodWastePackageOther) {
+        public ResponseEntity<FoodWastePackage> saveFoodWastePackage(@RequestBody FoodWastePackage foodWastePackageOther) {
             if(foodWastePackageOther != null && foodWastePackageOther.getId() == null){
                 InternalMessenger<FoodWastePackage> internalMessenger = foodWastePackageService.saveFoodWastePackage(foodWastePackageOther);
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED); // if data gets saved
                 }
-                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
+                else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null object to server
         }
 
         //Retrieve
         @GetMapping("/retrieve/{id}")
-        public ResponseEntity<FoodWastePackage> getFoodById (@PathVariable Long id) {
+        public ResponseEntity<FoodWastePackage> getFoodWastePackageById (@PathVariable Long id) {
             if(id != null){
                 InternalMessenger<FoodWastePackage> internalMessenger = foodWastePackageService.getFoodWastePackageById(id);
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
                 else if(internalMessenger.getErrorMessage().contains("element not found")) {
-                    return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+                    return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
                 }
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        @GetMapping("/get-list")
+        @GetMapping("/get-all")
         public ResponseEntity<List<FoodWastePackage>> getAllFoodWastePackages() {
             InternalMessenger<List<FoodWastePackage>> internalMessenger = foodWastePackageService.getAllFoodWastePackages();
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
 
         @GetMapping("/get-list-pending/{biz_id}")
@@ -61,7 +60,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -73,7 +72,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);  //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -87,7 +86,7 @@
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
-                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); // if unable to update, server problem
+                else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); // if unable to update, server problem
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
         }
@@ -99,7 +98,7 @@
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
-                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+                else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -111,38 +110,10 @@
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
-                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+                else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-
-
-//        @PutMapping("/update/pickup-status/{id}")
-//        public ResponseEntity<Boolean> togglePickupStatus(@PathVariable Long id) {
-//            if(id != null){
-//                boolean isToggled = foodWastePackageService.togglePickupStatus(id);
-//                if(isToggled) {
-//                    return new ResponseEntity<>(true,HttpStatus.OK);
-//                }
-//                else return new ResponseEntity<>(false,HttpStatus.OK);
-//            }
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        @PutMapping("/update/listed-status/{id}")
-//        public ResponseEntity<Boolean> toggleListedStatus(@PathVariable Long id) {
-//            if(id != null){
-//                boolean isToggled = foodWastePackageService.toggleListedStatus(id);
-//                if(isToggled) {
-//                    return new ResponseEntity<>(true,HttpStatus.OK);
-//                }
-//                else return new ResponseEntity<>(false,HttpStatus.OK);
-//            }
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-
 
         //Delete
         @DeleteMapping("/history/remove/{id}")

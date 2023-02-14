@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.IndividualUser;
 import vn.cloud.cardservice.repository.IndividualUserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -65,7 +66,7 @@ public class IndividualUserService {
             if(!individualUsers.isEmpty()) {
                 return new InternalMessenger<>(individualUsers,true); // only return non-deleted users
             }
-            else return new InternalMessenger<>(null,false,"list empty");
+            else return new InternalMessenger<>(new ArrayList<>(),false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());

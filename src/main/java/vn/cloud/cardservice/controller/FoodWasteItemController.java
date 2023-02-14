@@ -8,7 +8,6 @@
     import vn.cloud.cardservice.model.FoodWasteItem;
     import vn.cloud.cardservice.service.FoodWasteItemService;
 
-    import java.util.ArrayList;
     import java.util.List;
 
     @RestController
@@ -25,7 +24,7 @@
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED); // if data gets saved
                 }
-                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
+                else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null object to server
         }
@@ -39,7 +38,7 @@
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
                 else if(internalMessenger.getErrorMessage().contains("element not found")) {
-                    return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+                    return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
                 }
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,19 +52,19 @@
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
                 else if(internalMessenger.getErrorMessage().contains("element not found")) {
-                    return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+                    return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
                 }
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        @GetMapping("/get-list-all")
+        @GetMapping("/get-all")
         public ResponseEntity<List<FoodWasteItem>> getAllFoodWasteItems() {
             InternalMessenger<List<FoodWasteItem>> internalMessenger = foodWasteItemService.getAllFoodWasteItems();
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
 
         @GetMapping("/get-list/{biz_id}")
@@ -75,7 +74,7 @@
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
             }
-            else return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returns empty array as requested by client side
         }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -88,7 +87,7 @@
                 if(internalMessenger.isSuccess()) {
                     return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
                 }
-                else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); // if unable to update, server problem
+                else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); // if unable to update, server problem
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
         }

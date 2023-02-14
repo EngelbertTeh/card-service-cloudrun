@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.Food;
 import vn.cloud.cardservice.repository.FoodRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class FoodService {
             if(!foods.isEmpty()) {
                 return new InternalMessenger<>(foods, true);
             }
-            else return new InternalMessenger<>(null, false, "list empty");
+            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
@@ -61,7 +62,7 @@ public class FoodService {
             if(!foods.isEmpty()) {
                 return new InternalMessenger<>(foods, true);
             }
-            else return new InternalMessenger<>(null, false, "list empty");
+            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
@@ -74,15 +75,25 @@ public class FoodService {
             if(!foods.isEmpty()) {
                 return new InternalMessenger<>(foods, true);
             }
-            else return new InternalMessenger<>(null, false, "list empty");
+            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
         }
     }
-
-
-
+    
+    public InternalMessenger<List<Food>> getFoodsByIndIdAndCollectedStatus(Long ind_Id, Boolean isCollected) {
+        try {
+            List<Food> foods = foodRepository.findFoodsByIndividualUserIdAndCollectedStatus(ind_Id,isCollected);
+            if(!foods.isEmpty()) {
+                return new InternalMessenger<>(foods,true);
+            }
+            return new InternalMessenger<>(new ArrayList<>(),false,"list empty");
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new InternalMessenger<>(null,false,e.toString());
+        }
+    }
 
     //Update
     public InternalMessenger<Food> updateFood(Food foodOther) {
@@ -151,7 +162,6 @@ public class FoodService {
         }
 
 
-
     //Delete
     public Boolean deleteFoodById(Long id) { // hard delete, food waste data is considered not so valuable
         try {
@@ -168,5 +178,5 @@ public class FoodService {
         }
     }
 
-    
+
 }

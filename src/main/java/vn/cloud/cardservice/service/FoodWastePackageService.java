@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.FoodWastePackage;
 import vn.cloud.cardservice.repository.FoodWastePackageRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class FoodWastePackageService {
             if(!foodWastePackages.isEmpty()) {
                     return new InternalMessenger<>(foodWastePackages, true);
                 }
-             return new InternalMessenger<>(null,false,"list empty");
+             return new InternalMessenger<>(new ArrayList<>(),false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
@@ -61,13 +62,12 @@ public class FoodWastePackageService {
             if(!notCollectedFoodWastePackages.isEmpty()) {
                     return new InternalMessenger<>(notCollectedFoodWastePackages,true); // only return non-cancelled and not collected food waste packages
                 }
-             return new InternalMessenger<>(null,false,"list empty");
+             return new InternalMessenger<>(new ArrayList<>(),false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
         }
     }
-
 
     public InternalMessenger<List<FoodWastePackage>> getAllFoodWastePackagesHistory(Long biz_id) {
         try {
@@ -75,31 +75,12 @@ public class FoodWastePackageService {
             if(!foodWastePackagesHistory.isEmpty()) {
                     return new InternalMessenger<>(foodWastePackagesHistory,true); // only return cancelled or collected food waste packages
                 }
-             return new InternalMessenger<>(null,false,"list empty");
+             return new InternalMessenger<>(new ArrayList<>(),false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
         }
     }
-
-//    public InternalMessenger<List<FoodWastePackage>> getAllPendingCollection() {
-//        try {
-//            List<FoodWastePackage> foodWastePackages = foodWastePackageRepository.findAll();
-//            if(!foodWastePackages.isEmpty()) {
-//                List<FoodWastePackage> foodWastePackagesPendingCollection = new ArrayList<>();
-//                for(FoodWastePackage foodWastePackage : foodWastePackages) {
-//                    if(foodWastePackage.getIsCollected() == false) {
-//                        foodWastePackagesPendingCollection.add(foodWastePackage);
-//                    }
-//                }
-//                return new InternalMessenger<>(foodWastePackagesPendingCollection, true);
-//            }
-//            else return new InternalMessenger<>(null, false, "pending list empty");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new InternalMessenger<>(null, false, e.toString());
-//        }
-//    }
 
     //Update
     public InternalMessenger<FoodWastePackage> updateFoodWastePackage(FoodWastePackage foodWastePackageOther) {
@@ -150,43 +131,6 @@ public class FoodWastePackageService {
             return new InternalMessenger<>(null,true, e.toString());
         }
     }
-//
-//    public Boolean togglePickupStatus(Long id) {
-//        try {
-//            Optional<FoodWastePackage> foodWastePackageOpt = foodWastePackageRepository.findById(id); // find foodWastePackage
-//            if (foodWastePackageOpt.isPresent()) { // check if foodWastePackage exists
-//                FoodWastePackage foodWastePackage = foodWastePackageOpt.get();
-//                if(foodWastePackage.getIsPendingPickup()) {
-//                    foodWastePackage.setIsPendingPickup(false);  // if its true set to false
-//                }
-//                else foodWastePackage.setIsPendingPickup(true); // if its false set to true
-//                foodWastePackageRepository.saveAndFlush(foodWastePackage);
-//                return true;
-//            } else return false;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-//
-//    public Boolean toggleListedStatus(Long id) {
-//        try {
-//            Optional<FoodWastePackage> foodWastePackageOpt = foodWastePackageRepository.findById(id); // find foodWastePackage
-//            if (foodWastePackageOpt.isPresent()) { // check if foodWastePackage exists
-//                FoodWastePackage foodWastePackage = foodWastePackageOpt.get();
-//                if (foodWastePackage.getIsListed()) {
-//                    foodWastePackage.setIsListed(false);  // if its true set to false
-//                } else foodWastePackage.setIsListed(true); // if its false set to true
-//                foodWastePackageRepository.saveAndFlush(foodWastePackage);
-//                return true;
-//            } else return false;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-//
-
 
 
     //Delete
@@ -212,7 +156,7 @@ public class FoodWastePackageService {
             List<FoodWastePackage> foodWastePackagesHistoryList = foodWastePackageRepository.findAllFoodWastePackagesHistoryByBusinessUserId(biz_id);
             if (!foodWastePackagesHistoryList.isEmpty()) { // make sure list not empty
                 for(FoodWastePackage foodWastePackage : foodWastePackagesHistoryList) {
-                    foodWastePackageRepository.delete(foodWastePackage);  // one by one delete, all items must be deleted else roll back if something happen in between
+                    foodWastePackageRepository.delete(foodWastePackage);  // one by one delete, all items must be deleted else roll back if something happens in between
                 }
                 return true;
             }

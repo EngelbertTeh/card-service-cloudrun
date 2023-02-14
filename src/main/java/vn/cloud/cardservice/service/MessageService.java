@@ -6,6 +6,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.Message;
 import vn.cloud.cardservice.repository.MessageRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class MessageService {
             if(!messages.isEmpty()) {
                 return new InternalMessenger<>(messages, true);
             }
-            else return new InternalMessenger<>(null, false, "list empty");
+            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());

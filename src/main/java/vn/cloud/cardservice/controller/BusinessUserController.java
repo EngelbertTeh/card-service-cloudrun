@@ -25,7 +25,7 @@ public class BusinessUserController {
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.CREATED); // if data gets saved
             }
-            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); //returning null to client to indicate server responded to request but unable to save data, e.g., due to validation exception
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends a null or an existing object(duplicate Id) to server
     }
@@ -39,13 +39,13 @@ public class BusinessUserController {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
             }
             else if(internalMessenger.getErrorMessage().contains("element not found")) {
-                return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
             }
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/get-list")
+    @GetMapping("/get-all")
     public ResponseEntity<List<BusinessUser>> getAllBusinessUsers() {
         InternalMessenger<List<BusinessUser>> internalMessenger = businessUserService.getAllBusinessUsers();
         if(internalMessenger.isSuccess()) {
@@ -62,7 +62,7 @@ public class BusinessUserController {
             if(internalMessenger.isSuccess()) {
                 return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
             }
-            else return new ResponseEntity<>(null,HttpStatus.NO_CONTENT); // if unable to update, server problem
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT); // if unable to update, server problem
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
     }

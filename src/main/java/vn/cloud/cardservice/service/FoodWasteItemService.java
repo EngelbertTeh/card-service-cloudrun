@@ -7,6 +7,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.FoodWasteItem;
 import vn.cloud.cardservice.repository.FoodWasteItemRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -59,7 +60,7 @@ public class FoodWasteItemService {
             if(!foodWasteItems.isEmpty()) {
                 return new InternalMessenger<>(foodWasteItems, true);
             }
-            else return new InternalMessenger<>(null, false, "list empty");
+            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
@@ -73,7 +74,7 @@ public class FoodWasteItemService {
             if(!foodWasteItems.isEmpty()) {
                 return new InternalMessenger<>(foodWasteItems,true); // only return cancelled or collected food waste packages
             }
-            return new InternalMessenger<>(null,false,"list empty");
+            return new InternalMessenger<>(new ArrayList<>(),false,"list empty");
         } catch(Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());
