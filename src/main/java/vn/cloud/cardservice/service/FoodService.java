@@ -69,22 +69,18 @@ public class FoodService {
         try {
             List<Food> foods;
             String halalStatus = criteriaDTO.getHalalStatus().toLowerCase().trim(); // certain that halalStatus won't be null because client side uses radio button for halal status
-            if(criteriaDTO.getTitle() == null || criteriaDTO.getTitle().trim().length() == 0) {
-                if(halalStatus.equals("all")) {
-                    foods = foodRepository.findAll();
+            String title = criteriaDTO.getTitle();
+            if(halalStatus.equals("all")) {
+                if(title != null && title.trim().length() > 0) {
+                    foods = foodRepository.findAllByTitle(title.toLowerCase().trim());
                 }
-                else {
-                    foods = foodRepository.findAllByHalalStatus(halalStatus);
-                }
+               else foods = foodRepository.findAll();
             }
             else {
-                if(halalStatus.equals("all")) {
-                    foods = foodRepository.findAllByTitle(criteriaDTO.getTitle().toLowerCase().trim());
+                if(title != null && title.trim().length() > 0) {
+                    foods = foodRepository.findFoodsByCriteria(title.toLowerCase().trim(),halalStatus);
                 }
-                else {
-                    foods = foodRepository.findFoodsByCriteria(criteriaDTO.getTitle().toLowerCase().trim(), halalStatus);
-                }
-
+                else foods = foodRepository.findAllByHalalStatus(halalStatus);
             }
             if(!foods.isEmpty()) {
                 return new InternalMessenger<>(foods, true);
