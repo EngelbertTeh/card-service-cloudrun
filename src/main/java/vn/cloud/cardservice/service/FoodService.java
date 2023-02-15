@@ -27,8 +27,6 @@ public class FoodService {
     @Autowired
     private Storage storage;
 
-
-
     //Create
     public InternalMessenger<Food> saveFood(Food foodOther) {
         try {
@@ -71,7 +69,7 @@ public class FoodService {
         try {
             List<Food> foods;
             String halalStatus = criteriaDTO.getHalalStatus().toLowerCase().trim(); // certain that halalStatus won't be null because client side uses radio button for halal status
-            if(criteriaDTO.getTitle() == null) {
+            if(criteriaDTO.getTitle() == null || criteriaDTO.getTitle().trim().length() == 0) {
                 if(halalStatus.equals("all")) {
                     foods = foodRepository.findAll();
                 }
