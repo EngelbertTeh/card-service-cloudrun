@@ -63,16 +63,6 @@ public class FoodController {
 		else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
 	}
 
-
-	@PostMapping("/get-list/hnh")
-	public ResponseEntity<List<Food>> getFoodsByHalalStatus(@RequestBody CriteriaDTO criteriaDTO) {
-		InternalMessenger<List<Food>> internalMessenger = foodService.getFoodsByHalalStatus(criteriaDTO);
-		if(internalMessenger.isSuccess()) {
-			return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
-		}
-		else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
-	}
-
 	@GetMapping("/get-list/collected/{ind_id}")
 	public ResponseEntity<List<Food>> getCollectedFoodsByIndId(@PathVariable Long ind_id) {
 		if(ind_id != null){

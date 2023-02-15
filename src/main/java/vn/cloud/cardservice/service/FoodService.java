@@ -69,24 +69,17 @@ public class FoodService {
 
     public InternalMessenger<List<Food>> getFoodsByCriteria(CriteriaDTO criteriaDTO) {
         try {
-            List<Food> foods = foodRepository.findAllByCriteria(criteriaDTO.getTitle().toLowerCase().trim(),criteriaDTO.getHalal().toLowerCase().trim());
+            List<Food> foods;
+            if(criteriaDTO.getTitle() == null) {
+                foods = foodRepository.findAllByHalal(criteriaDTO.getHalal().toLowerCase().trim());
+            }
+            else {
+                foods = foodRepository.findFoodsByCriteria(criteriaDTO.getTitle().toLowerCase().trim(), criteriaDTO.getHalal().toLowerCase().trim());
+            }
             if(!foods.isEmpty()) {
                 return new InternalMessenger<>(foods, true);
             }
-            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new InternalMessenger<>(null, false, e.toString());
-        }
-    }
-
-    public InternalMessenger<List<Food>> getFoodsByHalalStatus(CriteriaDTO criteriaDTO) {
-        try {
-            List<Food> foods = foodRepository.findAllByHalalStatus(criteriaDTO.getHalal().toLowerCase().trim());
-            if(!foods.isEmpty()) {
-                return new InternalMessenger<>(foods, true);
-            }
-            else return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
+            return new InternalMessenger<>(new ArrayList<>(), false, "list empty");
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
