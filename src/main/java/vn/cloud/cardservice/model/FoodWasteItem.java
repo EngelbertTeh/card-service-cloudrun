@@ -30,6 +30,9 @@ public class FoodWasteItem implements Serializable
 
     private Double weight;
 
+    @JsonProperty("img")
+    private String imageUrl;
+
     @JsonProperty("business")
     @ManyToOne
     private BusinessUser businessUser;

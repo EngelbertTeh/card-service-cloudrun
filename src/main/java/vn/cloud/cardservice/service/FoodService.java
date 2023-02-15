@@ -191,12 +191,12 @@ public class FoodService {
                 // Decode the base64 string received from client into bytes, then store it in google cloud bucket
                 byte[] arr = Base64.getDecoder().decode(imageDTO.getBase64());
                 storage.create(info, arr);
-                return new InternalMessenger(food,true);
+                return new InternalMessenger<>(food,true);
             }
-            return new InternalMessenger(null,false,"not found");
+            return new InternalMessenger<>(null,false,"not found");
         } catch(IllegalArgumentException e) {
             e.printStackTrace();
-            return new InternalMessenger(null,false,"invalid format");
+            return new InternalMessenger<>(null,false,"invalid format");
     } catch(Exception e){
             e.printStackTrace();
             return new InternalMessenger<>(null,false,e.toString());

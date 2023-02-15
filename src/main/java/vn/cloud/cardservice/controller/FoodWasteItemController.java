@@ -4,6 +4,7 @@
     import org.springframework.http.HttpStatus;
     import org.springframework.http.ResponseEntity;
     import org.springframework.web.bind.annotation.*;
+    import vn.cloud.cardservice.dto.ImageDTO;
     import vn.cloud.cardservice.dto.InternalMessenger;
     import vn.cloud.cardservice.model.FoodWasteItem;
     import vn.cloud.cardservice.service.FoodWasteItemService;
@@ -91,6 +92,22 @@
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if client sends null, client problem
         }
+
+        @PutMapping("/image/upload")
+        public ResponseEntity<HttpStatus> uploadImage(@RequestBody ImageDTO imageDTO){
+            if (imageDTO != null) {
+                InternalMessenger<FoodWasteItem> internalMessenger = foodWasteItemService.uploadImage(imageDTO);
+                if(internalMessenger.isSuccess()) {
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+                else if(!internalMessenger.getErrorMessage().equals("not found") && !internalMessenger.getErrorMessage().equals("invalid format") ){
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // if it is due to server error when uploading image
+                }
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if imageDTO is null, or unable to retrieve object from repo due to invalid id (obj not created), or base64 string format invalid
+
+        }
+
 
         //Delete
         @DeleteMapping("/delete/{id}")
