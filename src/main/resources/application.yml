@@ -11,8 +11,15 @@ spring:
       data-source-properties:
         socketFactory: com.google.cloud.sql.postgres.SocketFactory
         cloudSqlInstance: ${DB_CLOUD_SQL_INSTANCE:card-service-dev-376619:asia-southeast2:super-db}
+  cloud:
+    gcp:
+      sql:
+        database-name: ${DB_DATABASE:postgres}
+        instance-connection-name: ${DB_CLOUD_SQL_INSTANCE:card-service-dev-376619:asia-southeast2:super-db}
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+central1: instance-name
+

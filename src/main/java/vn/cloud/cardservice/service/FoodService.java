@@ -1,22 +1,33 @@
 package vn.cloud.cardservice.service;
 
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
+import com.google.cloud.storage.Storage;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import vn.cloud.cardservice.dto.CriteriaDTO;
+import vn.cloud.cardservice.dto.ImageDTO;
 import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.Food;
 import vn.cloud.cardservice.repository.FoodRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
+
+import static vn.cloud.cardservice.utils.Constants.baseURL_static;
+import static vn.cloud.cardservice.utils.Constants.bucket_name_static;
 
 @Service
 public class FoodService {
 
     @Autowired
     FoodRepository foodRepository;
+
+    @Autowired
+    private Storage storage;
+
+
 
     //Create
     public InternalMessenger<Food> saveFood(Food foodOther) {
@@ -160,6 +171,37 @@ public class FoodService {
                 return false;
             }
         }
+
+    @Transactional // hyperlink url for img needs to be saved in entity and image needs be uploaded in cloud, both conditions needs to be met, else, rollback
+    public InternalMessenger<Food> uploadImage(@RequestBody ImageDTO imageDTO) { // adds a link to download the image from gcp bucket in the food entity, so its considered an update
+        try {
+            Optional<Food> foodOpt = foodRepository.findById(imageDTO.getId()); // find food
+            if (foodOpt.isPresent()) { // check if food exists
+                Food food = foodOpt.get();
+
+                // Prepare the image name and blob info
+                String name = String.format("food_%s", food.getId()) + ".jpg";
+                BlobId blobId = BlobId.of(bucket_name_static, String.format("images-food/%s", name));
+                BlobInfo info = BlobInfo.newBuilder(blobId).setContentType("image/jpg").build();
+
+                // Store the image url (a link that when invoked will download the image from gcp bucket)
+                food.setImageUrl(baseURL_static + blobId.getName());
+                foodRepository.saveAndFlush(food);
+
+                // Decode the base64 string received from client into bytes, then store it in google cloud bucket
+                byte[] arr = Base64.getDecoder().decode(imageDTO.getBase64());
+                storage.create(info, arr);
+                return new InternalMessenger(food,true);
+            }
+            return new InternalMessenger(null,false,"not found");
+        } catch(IllegalArgumentException e) {
+            e.printStackTrace();
+            return new InternalMessenger(null,false,"invalid format");
+    } catch(Exception e){
+            e.printStackTrace();
+            return new InternalMessenger<>(null,false,e.toString());
+        }
+}
 
 
     //Delete
