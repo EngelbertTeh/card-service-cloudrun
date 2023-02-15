@@ -37,7 +37,7 @@ public class Food {
     @JsonProperty("img")
     private String imageUrl;
     @JsonProperty("isHalal")
-    private String halal;
+    private String halalStatus;
     private String foodLocation;
     private Double Longitude;
     private Double Latitude;

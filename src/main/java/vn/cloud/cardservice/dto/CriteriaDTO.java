@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class CriteriaDTO {
     @JsonProperty("status")
-    private String halal;
+    private String halalStatus;
 
     @JsonProperty("search")
     private String title;
