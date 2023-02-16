@@ -48,7 +48,6 @@ public class Food {
     @NotBlank
     @Pattern(regexp = "^[0-9]+$")
     @Size(min = 6, max = 6, message = "The attribute must be exactly 6 characters long")
-    @Column(unique=true)
     private String postcode;
 
     private Long requestId;
@@ -63,6 +62,8 @@ public class Food {
     @CreationTimestamp
     private ZonedDateTime createdAt;
 
+
+    // special getters and setters, prevents client from tampering with lng and lat, only server will set the data
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public Double getLongitude() {

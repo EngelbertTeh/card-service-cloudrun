@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class GeoCodingCoordinates {
     @JsonProperty("location")
-    private GeoCodingLocation geoCodingLocation4;
+    private GeoCodingLocation geoCodingLocation;
 }
