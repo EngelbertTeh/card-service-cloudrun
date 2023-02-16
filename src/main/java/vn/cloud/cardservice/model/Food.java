@@ -3,13 +3,15 @@ package vn.cloud.cardservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Data
@@ -38,9 +40,16 @@ public class Food {
     private String imageUrl;
     @JsonProperty("isHalal")
     private String halalStatus;
-    private String foodLocation;
+
     private Double Longitude;
     private Double Latitude;
+
+    @JsonProperty("foodLocation")
+    @NotBlank
+    @Pattern(regexp = "^[0-9]+$")
+    @Size(min = 6, max = 6, message = "The attribute must be exactly 6 characters long")
+    @Column(unique=true)
+    private String postcode;
 
     private Long requestId;
 
@@ -48,10 +57,30 @@ public class Food {
     @ManyToOne
     private IndividualUser individualUser;
 
-    @NotNull
-    @JsonIgnore
-    @Setter(AccessLevel.NONE)
-    @Column(nullable=false)
-    private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
 
+    @JsonIgnore
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private ZonedDateTime createdAt;
+
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public Double getLongitude() {
+        return Longitude;
+    }
+
+    @JsonIgnore
+    public void setLongitude(Double longitude) {
+        Longitude = longitude;
+    }
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    public Double getLatitude() {
+        return Latitude;
+    }
+
+    @JsonIgnore
+    public void setLatitude(Double latitude) {
+        Latitude = latitude;
+    }
 }
