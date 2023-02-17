@@ -128,6 +128,7 @@ jobs:
             --update-secrets DB_USERNAME=DB_USERNAME:1 \
             --update-secrets DB_PASSWORD=DB_PASSWORD:3 \
             --update-secrets DB_CLOUD_SQL_INSTANCE=DB_CLOUD_SQL_INSTANCE:3 \
+            --update-secrets GMAP_API_KEY=GMAP_API_KEY:latest \
             --allow-unauthenticated
 
       # If required, use the Cloud Run url output in later steps
