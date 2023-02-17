@@ -41,7 +41,10 @@ public class Food {
     @JsonProperty("isHalal")
     private String halalStatus;
 
+    @Column(nullable = false)
     private Double Longitude;
+
+    @Column(nullable = false)
     private Double Latitude;
 
     @JsonProperty("foodLocation")
@@ -64,24 +67,24 @@ public class Food {
 
 
     // special getters and setters, prevents client from tampering with lng and lat, only server will set the data
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    public Double getLongitude() {
-        return Longitude;
-    }
-
-    @JsonIgnore
-    public void setLongitude(Double longitude) {
-        Longitude = longitude;
-    }
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    public Double getLatitude() {
-        return Latitude;
-    }
-
-    @JsonIgnore
-    public void setLatitude(Double latitude) {
-        Latitude = latitude;
-    }
+//
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    public Double getLongitude() {
+//        return Longitude;
+//    }
+//
+//    @JsonIgnore
+//    public void setLongitude(Double longitude) {
+//        Longitude = longitude;
+//    }
+//
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    public Double getLatitude() {
+//        return Latitude;
+//    }
+//
+//    @JsonIgnore
+//    public void setLatitude(Double latitude) {
+//        Latitude = latitude;
+//    }
 }
