@@ -24,4 +24,4 @@ spring:
 central1: instance-name
 
 gmaps:
-  api-u-r-l: ${gmaps_apikey} #stored in environment variable
+  apikey: ${sm://projects/320451649821/secrets/GMAP_API_KEY}
