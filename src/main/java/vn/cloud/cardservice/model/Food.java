@@ -41,10 +41,10 @@ public class Food {
     @JsonProperty("isHalal")
     private String halalStatus;
 
-    @Column(nullable = false)
+
     private Double Longitude;
 
-    @Column(nullable = false)
+
     private Double Latitude;
 
     @JsonProperty("foodLocation")

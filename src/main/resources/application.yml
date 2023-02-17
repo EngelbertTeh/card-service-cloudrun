@@ -23,3 +23,5 @@ spring:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 central1: instance-name
 
+gmaps:
+  api-u-r-l: ${gmaps_apikey} #stored in environment variable
