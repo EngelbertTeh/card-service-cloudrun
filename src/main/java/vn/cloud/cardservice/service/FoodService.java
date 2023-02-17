@@ -12,6 +12,7 @@ import vn.cloud.cardservice.dto.ImageDTO;
 import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.Food;
 import vn.cloud.cardservice.repository.FoodRepository;
+import vn.cloud.cardservice.utils.Postcode2LocationUtil;
 
 import java.util.*;
 
@@ -27,10 +28,18 @@ public class FoodService {
     @Autowired
     private Storage storage;
 
+    @Autowired
+    Postcode2LocationUtil postcode2LocationUtil;
+
     //Create
     public InternalMessenger<Food> saveFood(Food foodOther) {
         try {
-            Food foodR = foodRepository.saveAndFlush(foodOther);
+            Food foodR;
+            if(foodOther.getLatitude() == null || foodOther.getLongitude() == null) { // if lng and lat is null (not sent to backend because permission to access current location not granted by user), to convert postcode to lat and lng
+                Food foodWithLatNLng = postcode2LocationUtil.convertPostcode2Loc(foodOther);
+                foodR = foodRepository.saveAndFlush(foodWithLatNLng);
+            }
+            else foodR = foodRepository.saveAndFlush(foodOther);
             return new InternalMessenger<>(foodR, true);
         } catch (Exception e) {
             e.printStackTrace();

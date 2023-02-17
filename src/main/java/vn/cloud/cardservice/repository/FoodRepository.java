@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import vn.cloud.cardservice.model.Food;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface FoodRepository extends JpaRepository<Food,Long> {
@@ -19,4 +20,7 @@ public interface FoodRepository extends JpaRepository<Food,Long> {
 
     @Query("SELECT f FROM Food f WHERE LOWER(f.title) LIKE %:title%")
     List<Food> findAllByTitle(@Param("title") String title);
+
+    @Query("SELECT f FROM Food f WHERE f.createdAt BETWEEN :begin AND :end")
+    List<Food> findAllByDate(@Param("begin") ZonedDateTime begin, @Param("end") ZonedDateTime end );
 }

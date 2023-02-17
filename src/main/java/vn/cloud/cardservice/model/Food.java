@@ -66,6 +66,7 @@ public class Food {
     private ZonedDateTime createdAt;
 
 
+
     // special getters and setters, prevents client from tampering with lng and lat, only server will set the data
 //
 //    @JsonProperty(access = JsonProperty.Access.READ_ONLY)

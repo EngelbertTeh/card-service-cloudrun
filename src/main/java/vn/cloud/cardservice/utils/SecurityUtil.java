@@ -1,4 +1,4 @@
-package vn.cloud.cardservice.service;
+package vn.cloud.cardservice.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -7,7 +7,7 @@ import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.BaseUserModel;
 
 @Service
-public class SecurityService<T extends BaseUserModel> {
+public class SecurityUtil<T extends BaseUserModel> {
 
     @Autowired
     BCryptPasswordEncoder passwordEncoder;

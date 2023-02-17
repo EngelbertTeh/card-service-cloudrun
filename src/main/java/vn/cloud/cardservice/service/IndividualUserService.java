@@ -6,6 +6,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.IndividualUser;
 import vn.cloud.cardservice.repository.IndividualUserRepository;
+import vn.cloud.cardservice.utils.SecurityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Optional;
 public class IndividualUserService {
 
     @Autowired
-    SecurityService<IndividualUser> securityService;
+    SecurityUtil<IndividualUser> securityUtil;
     @Autowired
     IndividualUserRepository individualUserRepository;
 
@@ -24,7 +25,7 @@ public class IndividualUserService {
     //Create
     public InternalMessenger<IndividualUser> saveIndividualUser(IndividualUser individualUserOther) {
         try {
-            IndividualUser individualUserPasswordEncrypted = securityService.encryptPassword(individualUserOther);
+            IndividualUser individualUserPasswordEncrypted = securityUtil.encryptPassword(individualUserOther);
             IndividualUser individualUserR = individualUserRepository.saveAndFlush(individualUserPasswordEncrypted);
             return new InternalMessenger<>(individualUserR,true);
         } catch(Exception e) {
@@ -110,7 +111,7 @@ public class IndividualUserService {
 
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, IndividualUser individualUserR) {
-        return securityService.authenticate(loginDTO,individualUserR);
+        return securityUtil.authenticate(loginDTO,individualUserR);
     }
 
 }

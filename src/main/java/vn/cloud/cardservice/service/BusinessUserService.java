@@ -6,6 +6,7 @@ import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.BusinessUser;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
+import vn.cloud.cardservice.utils.SecurityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,14 +17,14 @@ import java.util.Optional;
 public class BusinessUserService {
 
     @Autowired
-    SecurityService<BusinessUser> securityService;
+    SecurityUtil<BusinessUser> securityUtil;
     @Autowired
     BusinessUserRepository businessUserRepository;
 
     //Create
     public InternalMessenger<BusinessUser> saveBusinessUser(BusinessUser businessUserOther) {
         try {
-                BusinessUser businessUserPasswordEncrypted = securityService.encryptPassword(businessUserOther);
+                BusinessUser businessUserPasswordEncrypted = securityUtil.encryptPassword(businessUserOther);
                 BusinessUser businessUserR = businessUserRepository.saveAndFlush(businessUserPasswordEncrypted);
                 return new InternalMessenger<>(businessUserR,true);
         } catch(Exception e) {
@@ -109,7 +110,7 @@ public class BusinessUserService {
 
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, BusinessUser businessUserR) {
-        return securityService.authenticate(loginDTO,businessUserR);
+        return securityUtil.authenticate(loginDTO,businessUserR);
     }
 
 
