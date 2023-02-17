@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import vn.cloud.cardservice.dto.GeoCodingResponse;
+import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 @RequestMapping("/api/hotspot")
@@ -14,12 +15,15 @@ public class PredictHotspotController {
 
     @Autowired
     WebClient geoCodingWebClient;
+    @Value("${sm://GMAP_API_KEY}")
+    String APIKEY; // in google cloud secrets
+    String postalCode = "602288";
+
 
     @GetMapping("/get/longlat")
     public GeoCodingResponse geoCoding() {
 
-        String APIKEY = "AIzaSyBbNJWniQYfsz4QNB64s3F5mbdiE09Yi64"; // to place in secrets
-        String postalCode = "118425";
+
 
 
         return geoCodingWebClient.get()

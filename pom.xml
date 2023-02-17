@@ -126,7 +126,12 @@
 			<artifactId>spring-security-crypto</artifactId>
 			<version>6.0.0</version>
 		</dependency>
-<!--		<dependency>-->
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>spring-cloud-gcp-starter-secretmanager</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+		<!--		<dependency>-->
 <!--			<groupId>com.google.apis</groupId>-->
 <!--			<artifactId>google-api-services-storage</artifactId>-->
 <!--			<version>v1-rev20220705-2.0.0</version>-->
