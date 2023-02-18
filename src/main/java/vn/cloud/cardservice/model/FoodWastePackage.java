@@ -53,8 +53,6 @@ public class FoodWastePackage {
 
     private String itemList;
 
-    private String category;
-
     @JsonProperty("business")
     @ManyToOne
     private BusinessUser businessUser;

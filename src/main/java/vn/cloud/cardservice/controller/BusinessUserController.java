@@ -45,6 +45,20 @@ public class BusinessUserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/retrieve/{email}")
+    public ResponseEntity<BusinessUser> getUserByEmail (@PathVariable String email) {
+        if(email != null){
+            InternalMessenger<BusinessUser> internalMessenger = businessUserService.getUserByEmail(email);
+            if(internalMessenger.isSuccess()) {
+                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
+            }
+            else if(internalMessenger.getErrorMessage().contains("element not found")) {
+                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
     @GetMapping("/get-all")
     public ResponseEntity<List<BusinessUser>> getAllBusinessUsers() {
         InternalMessenger<List<BusinessUser>> internalMessenger = businessUserService.getAllBusinessUsers();
