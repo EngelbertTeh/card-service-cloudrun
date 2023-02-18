@@ -20,8 +20,8 @@ public class MessageService {
     //Create
     public InternalMessenger<Message> saveMessage(Message messageOther) {
         try {
-            Message messageWasteBundleR = messageRepository.saveAndFlush(messageOther);
-            return new InternalMessenger<>(messageWasteBundleR, true);
+            Message messageR = messageRepository.saveAndFlush(messageOther);
+            return new InternalMessenger<>(messageR, true);
         } catch (Exception e) {
             e.printStackTrace();
             return new InternalMessenger<>(null, false, e.toString());
@@ -31,9 +31,9 @@ public class MessageService {
     //Retrieve
     public InternalMessenger<Message> getMessageById(Long id) {
         try {
-            Optional<Message> messageWasteBundleOpt = messageRepository.findById(id);
-            if (messageWasteBundleOpt.isPresent()) {
-                return new InternalMessenger<>(messageWasteBundleOpt.get(), true);
+            Optional<Message> messageOpt = messageRepository.findById(id);
+            if (messageOpt.isPresent()) {
+                return new InternalMessenger<>(messageOpt.get(), true);
             } else return new InternalMessenger<>(null, false, "element not found");
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,10 +58,10 @@ public class MessageService {
     //Update
     public InternalMessenger<Message> updateMessage(Message messageOther) {
         try {
-            Optional<Message> messageWasteBundleOpt = messageRepository.findById(messageOther.getId());
-            if (messageWasteBundleOpt.isPresent()) { // if such user exists
-                Message messageWasteBundleR = messageRepository.saveAndFlush(messageOther); // save changes
-                return new InternalMessenger<>(messageWasteBundleR, true);
+            Optional<Message> messageOpt = messageRepository.findById(messageOther.getId());
+            if (messageOpt.isPresent()) {
+                Message messageR = messageRepository.saveAndFlush(messageOther); // save changes
+                return new InternalMessenger<>(messageR, true);
             } else throw new NoSuchElementException(); // will not save as new instance if it is not found in db
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,10 +72,10 @@ public class MessageService {
     //Delete
     public Boolean deleteMessageById(Long id) { // hard delete
         try {
-            Optional<Message> messageWasteBundleOpt = messageRepository.findById(id);
-            if (messageWasteBundleOpt.isPresent()) { // make sure bundle exists
-                Message messageWasteBundleR = messageWasteBundleOpt.get();
-                messageRepository.delete(messageWasteBundleR);
+            Optional<Message> messageOpt = messageRepository.findById(id);
+            if (messageOpt.isPresent()) { // make sure bundle exists
+                Message messageR = messageOpt.get();
+                messageRepository.delete(messageR);
                 return true;
             }
             return false;

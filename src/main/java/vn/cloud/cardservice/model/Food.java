@@ -66,31 +66,8 @@ public class Food {
     @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @JsonIgnore
     @Setter(AccessLevel.NONE)
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(nullable=false)
     private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
 
 
-
-
-    // special getters and setters, prevents client from tampering with lng and lat, only server will set the data
-//
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    public Double getLongitude() {
-//        return Longitude;
-//    }
-//
-//    @JsonIgnore
-//    public void setLongitude(Double longitude) {
-//        Longitude = longitude;
-//    }
-//
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    public Double getLatitude() {
-//        return Latitude;
-//    }
-//
-//    @JsonIgnore
-//    public void setLatitude(Double latitude) {
-//        Latitude = latitude;
-//    }
 }

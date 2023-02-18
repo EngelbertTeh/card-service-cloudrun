@@ -3,10 +3,7 @@ package vn.cloud.cardservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.OTP;
 import vn.cloud.cardservice.service.BusinessUserService;
@@ -26,12 +23,16 @@ public class OTPController {
     // Create
     @GetMapping("/generate/{email}")
     private ResponseEntity<OTP> generateOTP(@PathVariable("email") String email) {
-        try {
-            return new ResponseEntity<>(otpService.generateOTP(email),HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(email != null) {
+            InternalMessenger<OTP> internalMessenger = otpService.generateOTP(email);
+            if(internalMessenger.isSuccess()) {
+                return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.CREATED);
         }
+            else return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
 
     // Retrieve
     @GetMapping("/retrieve/{email}")
@@ -50,10 +51,31 @@ public class OTPController {
 
 
     // Update
+    @PutMapping("/update")
+    public ResponseEntity<OTP> updateOTP(@RequestBody OTP otpOther) {
+        if(otpOther != null){
+            InternalMessenger<OTP> internalMessenger = otpService.updateOTP(otpOther);
+            if(internalMessenger.isSuccess()) {
+                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
+            }
+            else return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 
     // Delete
-    // Not required in controller for now
-
-
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Boolean> deleteOTP(@PathVariable Long id) {
+        if(id != null){
+            boolean isDeleted = otpService.deleteOTPById(id);
+            if(isDeleted) {
+                return new ResponseEntity<>(true,HttpStatus.OK);
+            }
+            else return new ResponseEntity<>(false,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }
+
+
