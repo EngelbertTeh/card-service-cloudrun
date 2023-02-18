@@ -7,29 +7,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import vn.cloud.cardservice.schedule.ScheduledTasks;
+import vn.cloud.cardservice.dto.InternalMessenger;
+import vn.cloud.cardservice.service.PredictHotspotService;
 
 @RestController
 @RequestMapping("/api/hotspot")
 public class PredictHotspotController {
 
-
     @Autowired
-    ScheduledTasks scheduledTasks;
+    PredictHotspotService predictHotspotService;
 
+    @GetMapping("/predict")
+    public ResponseEntity<String> predictHotspot() {
 
-    @GetMapping("/get/longlat")
-    public ResponseEntity<HttpStatus> geoCoding() {
-
-        try {
-            scheduledTasks.scrapeDataTrainModel();
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        InternalMessenger<String> internalMessenger = predictHotspotService.predictToday();
+        if(internalMessenger.isSuccess()) {
+            return new ResponseEntity<>(internalMessenger.getData(), HttpStatus.OK);
         }
-
-
-
+        else return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

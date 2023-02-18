@@ -2,13 +2,16 @@ package vn.cloud.cardservice.schedule;
 
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
+import jakarta.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import vn.cloud.cardservice.model.Food;
 import vn.cloud.cardservice.repository.FoodRepository;
+import vn.cloud.cardservice.service.PredictHotspotService;
 
 import javax.naming.ServiceUnavailableException;
 import java.io.StringWriter;
@@ -18,7 +21,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@Component
+@RestController
 public class ScheduledTasks {
 
     @Autowired
@@ -26,13 +29,17 @@ public class ScheduledTasks {
 
     @Autowired
     WebClient predictHotspotWebClient;
-    @Scheduled(cron = "0 36 13 * * *") // runs everyday at 12 midnight
+
+    @Autowired
+    PredictHotspotService predictHotspotService;
+
+    @Scheduled(cron = "0 0 0 * * *") // runs everyday at 12 midnight
     public void scrapeDataTrainModel() {
         try {
             scrapeDataFromOlioWebsite();
             sendDataFromFoodPostings();
-//            combineAllDataSets();
-//            trainPredictionModel();
+            combineAllDataSets();
+            trainPredictionModel();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -51,7 +58,6 @@ public class ScheduledTasks {
                             else return Mono.just(false); // if unable to scrape at flask server
                         }).block();
                 count++;
-                System.out.println(count);
             }
 
         if(Boolean.FALSE.equals(hasScraped)) {
@@ -70,7 +76,7 @@ public class ScheduledTasks {
         // Get food name ,created_time,latitude,longitude of the previous day
         LocalTime localTimeStart = LocalTime.of(0,0,0);
         LocalTime localTimeEnd = LocalTime.of(23,59,59);
-        LocalDate localDateYesterday = LocalDate.now().minusDays(1);
+        LocalDate localDateYesterday = LocalDate.now(ZoneId.of("Asia/Singapore")).minusDays(1);
         ZonedDateTime zdtStart = ZonedDateTime.of(localDateYesterday,localTimeStart,ZoneId.of("Asia/Singapore"));
         ZonedDateTime zdtEnd = ZonedDateTime.of(localDateYesterday,localTimeEnd,ZoneId.of("Asia/Singapore"));
         List<Food> foods = foodRepository.findAllByDate(zdtStart,zdtEnd); // making sure that even if there's a delay, the food data to be retrieved should start from the previous day at 00:00:00 hrs
@@ -130,19 +136,28 @@ public class ScheduledTasks {
 
     }
 
-    private void trainPredictionModel() throws ServiceUnavailableException {
-        Boolean hasTrained = false;
+    @GetMapping("/callme")
+    public void trainPredictionModel() throws ServiceUnavailableException, PersistenceException {
+        boolean hasTrained = false;
         int count = 0;
         while(Boolean.FALSE.equals(hasTrained) && count < 5) { // keeps on calling flask server to train model with new data for 5 times
-            hasTrained = predictHotspotWebClient.get()
+            String accuracyStr = predictHotspotWebClient.get()
                     .uri("api/predict-hotspot/train")
                     .exchangeToMono(response->{
                         if (response.statusCode().is2xxSuccessful()){
-                            return Mono.just(true); // returns true if manage to train model
+                            return response.bodyToMono(String.class); // returns true if manage to train model
                         }
-                        else return Mono.just(false); // if unable to train model at flask server
+                        else return Mono.just("-1"); // if unable to train model at flask server
                     }).block();
             count++;
+            if(!accuracyStr.equals("-1")) {
+                hasTrained = true;
+                Double accuracy = Double.parseDouble(accuracyStr);
+                if(predictHotspotService.saveAccuracy(accuracy).getData() == null) {
+                        throw new PersistenceException("Unable to save accuracy prediction");
+                }
+            }
+
         }
         if(Boolean.FALSE.equals(hasTrained)) {
             throw new ServiceUnavailableException("Flask server unable to provide service to train prediction model");
