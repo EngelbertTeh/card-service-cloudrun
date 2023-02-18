@@ -5,13 +5,10 @@ import org.springframework.stereotype.Service;
 import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.dto.LoginDTO;
 import vn.cloud.cardservice.model.BusinessUser;
-import vn.cloud.cardservice.model.OTP;
 import vn.cloud.cardservice.repository.BusinessUserRepository;
 import vn.cloud.cardservice.repository.OTPRepository;
 import vn.cloud.cardservice.utils.SecurityUtil;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -118,17 +115,6 @@ public class BusinessUserService {
     //Login Authentication
     public Boolean authenticate(LoginDTO loginDTO, BusinessUser businessUserR) {
         return securityUtil.authenticate(loginDTO,businessUserR);
-    }
-
-
-    // OTP
-    public OTP retrieveOTPByEmail (String email) {
-        ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
-        Optional<OTP> otpOptional = otpRepository.getUnexpiredOTPByEmail(email,currentTime);
-        if(otpOptional.isPresent()) {
-            return otpOptional.get();
-        }
-        return null;
     }
 
 

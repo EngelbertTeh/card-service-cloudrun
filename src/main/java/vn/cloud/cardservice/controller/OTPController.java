@@ -19,23 +19,32 @@ public class OTPController {
     private BusinessUserService businessUserService;
 
 
-    @PostMapping("/generateOTP/{email}")
-    @ResponseBody
-    private Object getOneTimePassword(@PathVariable("email") String email) {
+    // Create
+    @GetMapping("/generate/{email}")
+    private ResponseEntity<OTP> generateOTP(@PathVariable("email") String email) {
         try {
-            return ResponseEntity.ok(otpService.returnOTP(email));
+            return new ResponseEntity<>(otpService.generateOTP(email),HttpStatus.OK);
         } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    /////////////////////////////////For OTP///////////////////////////////////////////////////
-
+    // Retrieve
     @GetMapping("/retrieve/{email}")
     public ResponseEntity<OTP> getOTPByEmail(@PathVariable("email") String email){
-        OTP otp = businessUserService.retrieveOTPByEmail(email);
-        return new ResponseEntity<>(otp, HttpStatus.OK);
+        OTP otp = otpService.retrieveOTPByEmail(email);
+        if(otp != null) {
+            return new ResponseEntity<>(otp, HttpStatus.OK);
+        }
+        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
+
+    // Update
+
+
+    // Delete
+    // Not required in controller for now
 
 
 }
