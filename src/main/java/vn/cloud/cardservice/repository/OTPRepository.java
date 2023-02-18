@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface OTPRepository extends JpaRepository<OTP, Long> {
-    @Query("SELECT otp FROM OTP otp WHERE LOWER(otp.email) = :email AND otp.expiredTime < :currentTime")
+    @Query("SELECT otp FROM OTP otp WHERE LOWER(otp.email) = :email AND otp.expiredTime > :currentTime")
     Optional<OTP> getUnexpiredOTPByEmail(@Param("email") String email, @Param("currentTime")ZonedDateTime currentTime);
 
     @Modifying

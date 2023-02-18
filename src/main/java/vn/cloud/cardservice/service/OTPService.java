@@ -24,8 +24,9 @@ public class OTPService {
 
     public InternalMessenger<OTP> getOTPByEmail (String email) {
         try {
+            String emailT = email.toLowerCase().trim();
             ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
-            Optional<OTP> otpOptional = otpRepository.getUnexpiredOTPByEmail(email,currentTime);
+            Optional<OTP> otpOptional = otpRepository.getUnexpiredOTPByEmail(emailT,currentTime);
             if(otpOptional.isPresent()) {
                 return new InternalMessenger<>(otpOptional.get(),true);
             }
