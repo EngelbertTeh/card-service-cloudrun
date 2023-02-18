@@ -3,7 +3,11 @@ package vn.cloud.cardservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.OTP;
 import vn.cloud.cardservice.service.BusinessUserService;
 import vn.cloud.cardservice.service.OTPService;
@@ -32,13 +36,18 @@ public class OTPController {
     // Retrieve
     @GetMapping("/retrieve/{email}")
     public ResponseEntity<OTP> getOTPByEmail(@PathVariable("email") String email){
-        OTP otp = otpService.retrieveOTPByEmail(email);
-        if(otp != null) {
-            return new ResponseEntity<>(otp, HttpStatus.OK);
+        if (email != null) {
+            InternalMessenger<OTP> internalMessenger = otpService.getOTPByEmail(email);
+            if(internalMessenger.isSuccess()) {
+                return new ResponseEntity<>(internalMessenger.getData(),HttpStatus.OK);
+            }
+            else if(!internalMessenger.getErrorMessage().equals("not found")){
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // if it is due to server error
+            }
         }
-        else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // if email is not connected to any OTP or email is null
     }
+
 
     // Update
 

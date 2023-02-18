@@ -137,7 +137,7 @@ public class FoodController {
 	}
 
 	@PutMapping("/image/upload")
-	public ResponseEntity uploadImage(@RequestBody ImageDTO imageDTO){
+	public ResponseEntity<HttpStatus> uploadImage(@RequestBody ImageDTO imageDTO){
 		if (imageDTO != null) {
 			InternalMessenger<Food> internalMessenger = foodService.uploadImage(imageDTO);
 			if(internalMessenger.isSuccess()) {

@@ -3,6 +3,7 @@ package vn.cloud.cardservice.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.cloud.cardservice.dto.InternalMessenger;
 import vn.cloud.cardservice.model.OTP;
 import vn.cloud.cardservice.repository.OTPRepository;
 import vn.cloud.cardservice.utils.OTPGeneratorUtil;
@@ -21,13 +22,19 @@ public class OTPService {
 
     // Retrieve
 
-    public OTP retrieveOTPByEmail (String email) {
-        ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
-        Optional<OTP> otpOptional = otpRepository.getUnexpiredOTPByEmail(email,currentTime);
-        if(otpOptional.isPresent()) {
-            return otpOptional.get();
+    public InternalMessenger<OTP> getOTPByEmail (String email) {
+        try {
+            ZonedDateTime currentTime = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
+            Optional<OTP> otpOptional = otpRepository.getUnexpiredOTPByEmail(email,currentTime);
+            if(otpOptional.isPresent()) {
+                return new InternalMessenger<>(otpOptional.get(),true);
+            }
+            return new InternalMessenger<>(null,false,"not found");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new InternalMessenger<>(null,false,e.toString());
         }
-        return null;
+
     }
 
     // Update
