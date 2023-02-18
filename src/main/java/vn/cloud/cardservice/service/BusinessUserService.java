@@ -82,7 +82,8 @@ public class BusinessUserService {
         try {
             Optional<BusinessUser> businessUserOpt = businessUserRepository.findById(businessUserOther.getId());
             if(businessUserOpt.isPresent() && businessUserOpt.get().getIsDeactivated() == false) {
-                BusinessUser businessUserS = businessUserRepository.saveAndFlush(businessUserOther); // save changes
+                BusinessUser businessUserPasswordEncrypted = securityUtil.encryptPassword(businessUserOther);
+                BusinessUser businessUserS = businessUserRepository.saveAndFlush(businessUserPasswordEncrypted); // save changes
                 return new InternalMessenger<>(businessUserS,true);
             }
             else throw new NoSuchElementException(); // will not save as new instance if it is not found in db

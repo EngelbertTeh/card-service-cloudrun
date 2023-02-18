@@ -79,7 +79,8 @@ public class IndividualUserService {
         try {
             Optional<IndividualUser> individualUserOpt = individualUserRepository.findById(individualUserOther.getId());
             if(individualUserOpt.isPresent() && individualUserOpt.get().getIsDeactivated() == false) {
-                IndividualUser individualUserS = individualUserRepository.saveAndFlush(individualUserOther); // save changes
+                IndividualUser individualUserPasswordEncrypted = securityUtil.encryptPassword(individualUserOther);
+                IndividualUser individualUserS = individualUserRepository.saveAndFlush(individualUserPasswordEncrypted); // save changes
                 return new InternalMessenger<>(individualUserS,true);
             }
             else throw new NoSuchElementException(); // will not save as new instance if it is not found in db
