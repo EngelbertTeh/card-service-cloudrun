@@ -10,8 +10,8 @@ public class WebClientConfig {
     @Bean
     public WebClient predictHotspotWebClient(WebClient.Builder builder ){
 
-        return builder.baseUrl("http://localhost:5000/").build();
-    };
+        return builder.baseUrl("http://localhost:8081/").build();
+    }
 
     @Bean
     public WebClient geoCodingWebClient(){

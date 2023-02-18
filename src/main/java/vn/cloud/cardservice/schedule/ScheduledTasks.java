@@ -26,13 +26,13 @@ public class ScheduledTasks {
 
     @Autowired
     WebClient predictHotspotWebClient;
-    @Scheduled(cron = "0 0 7 * * *") // runs everyday at 12 midnight
+    @Scheduled(cron = "0 36 13 * * *") // runs everyday at 12 midnight
     public void scrapeDataTrainModel() {
         try {
             scrapeDataFromOlioWebsite();
             sendDataFromFoodPostings();
-            combineAllDataSets();
-            trainPredictionModel();
+//            combineAllDataSets();
+//            trainPredictionModel();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,17 +41,19 @@ public class ScheduledTasks {
     private void scrapeDataFromOlioWebsite() throws ServiceUnavailableException {
         Boolean hasScraped = false;
         int count = 0;
-        while(Boolean.FALSE.equals(hasScraped) && count < 5) { // keeps on calling flask server to scrape for 5 times
-            hasScraped = predictHotspotWebClient.get()
-                    .uri("api/predict-hotspot/scrape")
-                    .exchangeToMono(response->{
-                        if (response.statusCode().is2xxSuccessful()){
-                            return Mono.just(true); // returns true if manage to scrape
-                        }
-                        else return Mono.just(false); // if unable to scrape at flask server
-                    }).block();
-            count++;
-        }
+        while(Boolean.FALSE.equals(hasScraped) && count < 5 ) { // keeps on calling flask server to scrape for 5 times
+                hasScraped = predictHotspotWebClient.get()
+                        .uri("api/predict-hotspot/scrape")
+                        .exchangeToMono(response->{
+                            if (response.statusCode().is2xxSuccessful()){
+                                return Mono.just(true); // returns true if manage to scrape
+                            }
+                            else return Mono.just(false); // if unable to scrape at flask server
+                        }).block();
+                count++;
+                System.out.println(count);
+            }
+
         if(Boolean.FALSE.equals(hasScraped)) {
             throw new ServiceUnavailableException("Flask server unable to provide service to scrape Olio webpage");
         }

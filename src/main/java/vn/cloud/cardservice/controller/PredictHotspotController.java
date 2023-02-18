@@ -21,6 +21,15 @@ public class PredictHotspotController {
     @GetMapping("/get/longlat")
     public ResponseEntity<HttpStatus> geoCoding() {
 
-        return null;
+        try {
+            scheduledTasks.scrapeDataTrainModel();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+
     }
 }
