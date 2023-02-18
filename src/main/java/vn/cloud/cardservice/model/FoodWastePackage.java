@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 
 @NoArgsConstructor
@@ -56,5 +59,14 @@ public class FoodWastePackage {
     @JsonProperty("business")
     @ManyToOne
     private BusinessUser businessUser;
+
+    @NotNull
+    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @JsonIgnore
+    @Setter(AccessLevel.NONE)
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
+
+
 
 }

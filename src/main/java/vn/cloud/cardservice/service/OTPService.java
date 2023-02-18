@@ -56,8 +56,8 @@ public class OTPService {
 
             otp.setOneTimePasswordCode(OTPGeneratorUtil.createOTP().get());
 
-            ZonedDateTime creationTimeStamp = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
-            ZonedDateTime expiryTimeStamp = ZonedDateTime.now(ZoneId.of("Asia/Singapore")).plusMinutes(3);
+            ZonedDateTime creationTimeStamp = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
+            ZonedDateTime expiryTimeStamp = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore")).plusMinutes(5);
             otp.setCreatedTime(creationTimeStamp);
             otp.setExpiredTime(expiryTimeStamp);
             otp.setEmail(emailT);

@@ -30,11 +30,12 @@ public class Message {
     private LocalDate sendTime;
 
     private String content;
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @NotNull
+    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
     @JsonIgnore
     @Setter(AccessLevel.NONE)
-    @Column(nullable=false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
+
 
 }
