@@ -5,8 +5,7 @@ import com.opencsv.exceptions.CsvException;
 import jakarta.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import vn.cloud.cardservice.model.Food;
@@ -22,7 +21,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-@RestController
+@Component
 public class ScheduledTasks {
 
     @Autowired
@@ -37,11 +36,11 @@ public class ScheduledTasks {
     @Autowired
     GoogleCloudBucketUtil googleCloudBucketUtil;
 
-    @Scheduled(cron = "0 0 0 * * *") // runs everyday at 12 midnight
+    @Scheduled(cron = "0 56 13 * * *") // runs everyday at 12 midnight
     public void scrapeDataTrainModel() {
         try {
-            sendDataFromFoodPostingsToGCPBucket();
-            combineAllDataSets();
+//            sendDataFromFoodPostingsToGCPBucket();
+//            combineAllDataSets();
             trainPredictionModel();
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,7 +49,7 @@ public class ScheduledTasks {
 
 
 
-    // cant be used in deployment to cloud
+    // cant be used in deployment to cloud yet
 
 //    private void scrapeDataFromOlioWebsite() throws ServiceUnavailableException {
 //        Boolean hasScraped = false;
@@ -73,8 +72,7 @@ public class ScheduledTasks {
 //    }
 
 
-    @GetMapping("/testing")
-    public void sendDataFromFoodPostingsToGCPBucket() throws CsvException, ServiceUnavailableException  {
+    private void sendDataFromFoodPostingsToGCPBucket() throws CsvException, ServiceUnavailableException  {
         boolean hasSentData = false;
         int count = 0;
 
@@ -87,14 +85,8 @@ public class ScheduledTasks {
         LocalDate localDateYesterday = LocalDate.now(ZoneId.of("Asia/Singapore")).minusDays(1);
         ZonedDateTime zdtStart = ZonedDateTime.of(localDateYesterday,localTimeStart,ZoneId.of("Asia/Singapore"));
         ZonedDateTime zdtEnd = ZonedDateTime.of(localDateYesterday,localTimeEnd,ZoneId.of("Asia/Singapore"));
-        System.out.println(zdtStart);
-        System.out.println(zdtEnd);
-        System.out.println(LocalDate.now(ZoneId.of("Asia/Singapore")));
         List<Food> foods = foodRepository.findAllByDate(zdtStart,zdtEnd); // making sure that even if there's a delay, the food data to be retrieved should start from the previous day at 00:00:00 hrs
 
-        for(Food food : foods) {
-            System.out.println(food);
-        }
         StringWriter stringWriter = new StringWriter(); // Create a StringWriter to hold the CSV data
 
         try {
@@ -121,6 +113,8 @@ public class ScheduledTasks {
             e.printStackTrace();
         }
 
+        if(Boolean.FALSE.equals(hasSentData)) {
+            throw new ServiceUnavailableException("GCP Bucket unable to receive data");
 
 //        while(Boolean.FALSE.equals(hasSentData) && count < 5) { // keeps trying to send csv data for 5 times
 //            hasSentData = predictHotspotWebClient.post()
@@ -135,8 +129,6 @@ public class ScheduledTasks {
 //            count++;
 //        }
 
-        if(Boolean.FALSE.equals(hasSentData)) {
-            throw new ServiceUnavailableException("GCP Bucket unable to receive data");
         }
     }
 
@@ -157,10 +149,8 @@ public class ScheduledTasks {
         if(Boolean.FALSE.equals(hasCombined)) {
             throw new ServiceUnavailableException("Flask server unable to provide service to combine dataset");
         }
-
     }
 
-    @GetMapping("/callme")
     public void trainPredictionModel() throws ServiceUnavailableException, PersistenceException {
         boolean hasTrained = false;
         int count = 0;
@@ -174,7 +164,7 @@ public class ScheduledTasks {
                         else return Mono.just("-1"); // if unable to train model at flask server
                     }).block();
             count++;
-            if(!accuracyStr.equals("-1")) {
+            if(accuracyStr != null && accuracyStr.equals("-1")) {
                 hasTrained = true;
                 Double accuracy = Double.parseDouble(accuracyStr);
                 if(predictHotspotService.saveAccuracy(accuracy).getData() == null) {
