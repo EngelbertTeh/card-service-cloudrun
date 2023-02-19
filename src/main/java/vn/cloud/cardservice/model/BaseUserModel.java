@@ -29,8 +29,7 @@ public abstract class BaseUserModel {
     @Size(min = 8, max = 255)
 	@Column(nullable=false)
     private String password;
-	
-	
+
 	@NotNull
 	@JsonIgnore
 	@Column(nullable=false)

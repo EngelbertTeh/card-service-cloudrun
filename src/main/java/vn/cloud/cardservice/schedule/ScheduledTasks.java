@@ -36,11 +36,11 @@ public class ScheduledTasks {
     @Autowired
     GoogleCloudBucketUtil googleCloudBucketUtil;
 
-    @Scheduled(cron = "0 56 13 * * *") // runs everyday at 12 midnight
-    public void scrapeDataTrainModel() {
+    @Scheduled(cron = "0 40 16 * * *") // runs everyday at 12 midnight
+    public void combineDataTrainModel() {
         try {
-//            sendDataFromFoodPostingsToGCPBucket();
-//            combineAllDataSets();
+            sendDataFromFoodPostingsToGCPBucket();
+            combineAllDataSets();
             trainPredictionModel();
         } catch (Exception e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class ScheduledTasks {
 
 
 
-    // cant be used in deployment to cloud yet
+    // selenium web scraping cant be used for deployment yet, but can be used manually on localhost
 
 //    private void scrapeDataFromOlioWebsite() throws ServiceUnavailableException {
 //        Boolean hasScraped = false;
