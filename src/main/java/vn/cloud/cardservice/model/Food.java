@@ -63,10 +63,10 @@ public class Food {
     private IndividualUser individualUser;
 
     @NotNull
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @JsonIgnore
     @Setter(AccessLevel.NONE)
-    @Column(nullable=false)
+    @Column(nullable=false,  name = "created_at")
     private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
 
 

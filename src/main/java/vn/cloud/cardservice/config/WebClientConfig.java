@@ -10,7 +10,7 @@ public class WebClientConfig {
     @Bean
     public WebClient predictHotspotWebClient(WebClient.Builder builder ){
 
-        return builder.baseUrl("http://localhost:8081/").build();
+        return builder.baseUrl("https://getprediction-lwbna3zk2a-et.a.run.app/").build();
     }
 
     @Bean

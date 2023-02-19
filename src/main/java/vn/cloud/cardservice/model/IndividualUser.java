@@ -55,7 +55,7 @@ public class IndividualUser extends BaseUserModel{
 	 @Nullable
 	 @Min(value=0)
 	 private Integer points = 0;
-	@TimeZoneStorage(TimeZoneStorageType.NATIVE)
+	@TimeZoneStorage(TimeZoneStorageType.COLUMN)
 	 @DateTimeFormat(pattern = "dd/MM/yyyy")
 	 @Past
 	 @Nullable

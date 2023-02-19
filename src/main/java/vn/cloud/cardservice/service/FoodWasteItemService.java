@@ -14,8 +14,8 @@ import vn.cloud.cardservice.repository.FoodWasteItemRepository;
 
 import java.util.*;
 
-import static vn.cloud.cardservice.utils.Constants.baseURL_static;
-import static vn.cloud.cardservice.utils.Constants.bucket_name_static;
+import static vn.cloud.cardservice.utils.Constants.BASE_URL_STATIC;
+import static vn.cloud.cardservice.utils.Constants.BUCKET_NAME_STATIC;
 
 @Service
 public class FoodWasteItemService {
@@ -112,11 +112,11 @@ public class FoodWasteItemService {
 
                 // Prepare the image name and blob info
                 String name = String.format("foodWasteItem_%s", foodWasteItem.getId()) + ".jpg";
-                BlobId blobId = BlobId.of(bucket_name_static, String.format("images-foodWasteItem/%s", name));
+                BlobId blobId = BlobId.of(BUCKET_NAME_STATIC, String.format("images-foodWasteItem/%s", name));
                 BlobInfo info = BlobInfo.newBuilder(blobId).setContentType("image/jpg").build();
 
                 // Store the image url (a link that when invoked will download the image from gcp bucket)
-                foodWasteItem.setImageUrl(baseURL_static + blobId.getName());
+                foodWasteItem.setImageUrl(BASE_URL_STATIC + blobId.getName());
                 foodWasteItemRepository.saveAndFlush(foodWasteItem);
 
                 // Decode the base64 string received from client into bytes, then store it in google cloud bucket

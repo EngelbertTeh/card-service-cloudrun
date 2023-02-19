@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 import vn.cloud.cardservice.model.Food;
 import vn.cloud.cardservice.repository.FoodRepository;
 import vn.cloud.cardservice.service.PredictHotspotService;
+import vn.cloud.cardservice.utils.GoogleCloudBucketUtil;
 
 import javax.naming.ServiceUnavailableException;
 import java.io.StringWriter;
@@ -33,11 +34,13 @@ public class ScheduledTasks {
     @Autowired
     PredictHotspotService predictHotspotService;
 
+    @Autowired
+    GoogleCloudBucketUtil googleCloudBucketUtil;
+
     @Scheduled(cron = "0 0 0 * * *") // runs everyday at 12 midnight
     public void scrapeDataTrainModel() {
         try {
-            scrapeDataFromOlioWebsite();
-            sendDataFromFoodPostings();
+            sendDataFromFoodPostingsToGCPBucket();
             combineAllDataSets();
             trainPredictionModel();
         } catch (Exception e) {
@@ -45,29 +48,34 @@ public class ScheduledTasks {
         }
     }
 
-    private void scrapeDataFromOlioWebsite() throws ServiceUnavailableException {
-        Boolean hasScraped = false;
-        int count = 0;
-        while(Boolean.FALSE.equals(hasScraped) && count < 5 ) { // keeps on calling flask server to scrape for 5 times
-                hasScraped = predictHotspotWebClient.get()
-                        .uri("api/predict-hotspot/scrape")
-                        .exchangeToMono(response->{
-                            if (response.statusCode().is2xxSuccessful()){
-                                return Mono.just(true); // returns true if manage to scrape
-                            }
-                            else return Mono.just(false); // if unable to scrape at flask server
-                        }).block();
-                count++;
-            }
-
-        if(Boolean.FALSE.equals(hasScraped)) {
-            throw new ServiceUnavailableException("Flask server unable to provide service to scrape Olio webpage");
-        }
-    }
 
 
-    private void sendDataFromFoodPostings() throws CsvException, ServiceUnavailableException  {
-        Boolean hasSentData = false;
+    // cant be used in deployment to cloud
+
+//    private void scrapeDataFromOlioWebsite() throws ServiceUnavailableException {
+//        Boolean hasScraped = false;
+//        int count = 0;
+//        while(Boolean.FALSE.equals(hasScraped) && count < 5 ) { // keeps on calling flask server to scrape for 5 times
+//                hasScraped = predictHotspotWebClient.get()
+//                        .uri("api/predict-hotspot/scrape")
+//                        .exchangeToMono(response->{
+//                            if (response.statusCode().is2xxSuccessful()){
+//                                return Mono.just(true); // returns true if manage to scrape
+//                            }
+//                            else return Mono.just(false); // if unable to scrape at flask server
+//                        }).block();
+//                count++;
+//            }
+//
+//        if(Boolean.FALSE.equals(hasScraped)) {
+//            throw new ServiceUnavailableException("Flask server unable to provide service to scrape Olio webpage");
+//        }
+//    }
+
+
+    @GetMapping("/testing")
+    public void sendDataFromFoodPostingsToGCPBucket() throws CsvException, ServiceUnavailableException  {
+        boolean hasSentData = false;
         int count = 0;
 
         // Set the CSV headers
@@ -79,8 +87,14 @@ public class ScheduledTasks {
         LocalDate localDateYesterday = LocalDate.now(ZoneId.of("Asia/Singapore")).minusDays(1);
         ZonedDateTime zdtStart = ZonedDateTime.of(localDateYesterday,localTimeStart,ZoneId.of("Asia/Singapore"));
         ZonedDateTime zdtEnd = ZonedDateTime.of(localDateYesterday,localTimeEnd,ZoneId.of("Asia/Singapore"));
+        System.out.println(zdtStart);
+        System.out.println(zdtEnd);
+        System.out.println(LocalDate.now(ZoneId.of("Asia/Singapore")));
         List<Food> foods = foodRepository.findAllByDate(zdtStart,zdtEnd); // making sure that even if there's a delay, the food data to be retrieved should start from the previous day at 00:00:00 hrs
 
+        for(Food food : foods) {
+            System.out.println(food);
+        }
         StringWriter stringWriter = new StringWriter(); // Create a StringWriter to hold the CSV data
 
         try {
@@ -93,26 +107,36 @@ public class ScheduledTasks {
                 writer.writeNext(rowData);
             }
         } catch(Exception e) {
+            e.printStackTrace();
             throw new CsvException("Unable to write data");
         }
 
         String csvData = stringWriter.toString(); // Get the CSV data as a string
+        System.out.println(csvData);
 
-        while(Boolean.FALSE.equals(hasSentData) && count < 5) { // keeps trying to send csv data for 5 times
-            hasSentData = predictHotspotWebClient.post()
-                    .uri("api/predict-hotspot/incoming_csv")
-                    .body(Mono.just(csvData),String.class)
-                    .exchangeToMono(response->{
-                        if (response.statusCode().is2xxSuccessful()){
-                            return Mono.just(true); // returns true if manage to send
-                        }
-                        else return Mono.just(false); // if unable to send data
-                    }).block();
-            count++;
+        try {
+            googleCloudBucketUtil.writeFileToGCSBucket(csvData);
+            hasSentData = true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+
+//        while(Boolean.FALSE.equals(hasSentData) && count < 5) { // keeps trying to send csv data for 5 times
+//            hasSentData = predictHotspotWebClient.post()
+//                    .uri("api/predict-hotspot/incoming_csv")
+//                    .body(Mono.just(csvData),String.class)
+//                    .exchangeToMono(response->{
+//                        if (response.statusCode().is2xxSuccessful()){
+//                            return Mono.just(true); // returns true if manage to send
+//                        }
+//                        else return Mono.just(false); // if unable to send data
+//                    }).block();
+//            count++;
+//        }
+
         if(Boolean.FALSE.equals(hasSentData)) {
-            throw new ServiceUnavailableException("Flask server unable to receive data");
+            throw new ServiceUnavailableException("GCP Bucket unable to receive data");
         }
     }
 

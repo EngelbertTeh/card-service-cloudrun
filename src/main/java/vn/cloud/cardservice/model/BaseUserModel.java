@@ -37,7 +37,7 @@ public abstract class BaseUserModel {
     private Boolean isDeactivated = false;
 	
 	@NotNull
-	@TimeZoneStorage(TimeZoneStorageType.NATIVE)
+	@TimeZoneStorage(TimeZoneStorageType.COLUMN)
 	@JsonIgnore
 	@Setter(AccessLevel.NONE)
     @Column(nullable=false)

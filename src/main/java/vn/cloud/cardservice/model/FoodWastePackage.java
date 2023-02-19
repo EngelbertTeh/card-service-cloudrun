@@ -41,7 +41,7 @@ public class FoodWastePackage {
     private LocalTime endTime;
 
     @FutureOrPresent
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDate pickUpDate;
 
@@ -61,7 +61,7 @@ public class FoodWastePackage {
     private BusinessUser businessUser;
 
     @NotNull
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false, updatable = false)

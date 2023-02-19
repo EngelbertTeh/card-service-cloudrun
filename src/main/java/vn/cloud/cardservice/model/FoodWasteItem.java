@@ -44,7 +44,7 @@ public class FoodWasteItem implements Serializable
     private BusinessUser businessUser;
 
     @NotNull
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @Column(name = "created_at", nullable = false, updatable = false)

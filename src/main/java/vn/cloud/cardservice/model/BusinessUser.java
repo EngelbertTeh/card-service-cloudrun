@@ -55,10 +55,10 @@ public class BusinessUser extends BaseUserModel
     @NotBlank
     @Column(nullable=false)
     private String openingDays;
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime openingTime;
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime closingTime;
 

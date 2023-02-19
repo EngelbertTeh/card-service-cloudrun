@@ -16,8 +16,8 @@ import vn.cloud.cardservice.utils.Postcode2LocationUtil;
 
 import java.util.*;
 
-import static vn.cloud.cardservice.utils.Constants.baseURL_static;
-import static vn.cloud.cardservice.utils.Constants.bucket_name_static;
+import static vn.cloud.cardservice.utils.Constants.BASE_URL_STATIC;
+import static vn.cloud.cardservice.utils.Constants.BUCKET_NAME_STATIC;
 
 @Service
 public class FoodService {
@@ -189,11 +189,11 @@ public class FoodService {
 
                 // Prepare the image name and blob info
                 String name = String.format("food_%s", food.getId()) + ".jpg";
-                BlobId blobId = BlobId.of(bucket_name_static, String.format("images-food/%s", name));
+                BlobId blobId = BlobId.of(BUCKET_NAME_STATIC, String.format("images-food/%s", name));
                 BlobInfo info = BlobInfo.newBuilder(blobId).setContentType("image/jpg").build();
 
                 // Store the image url (a link that when invoked will download the image from gcp bucket)
-                food.setImageUrl(baseURL_static + blobId.getName());
+                food.setImageUrl(BASE_URL_STATIC + blobId.getName());
                 foodRepository.saveAndFlush(food);
 
                 // Decode the base64 string received from client into bytes, then store it in google cloud bucket

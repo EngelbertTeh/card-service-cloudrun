@@ -26,13 +26,13 @@ public class OTP {
     @JsonIgnore
     @Column(name = "expired_time", nullable = false, updatable = false)
     @NotNull
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     private ZonedDateTime expiredTime;
 
     @JsonIgnore
     @Column(name = "created_time", nullable = false, updatable = false)
     @NotNull
-    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     private ZonedDateTime createdTime;
 
     @NotBlank
