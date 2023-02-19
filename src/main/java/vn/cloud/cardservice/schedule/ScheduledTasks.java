@@ -36,7 +36,7 @@ public class ScheduledTasks {
     @Autowired
     GoogleCloudBucketUtil googleCloudBucketUtil;
 
-    @Scheduled(cron = "0 40 16 * * *") // runs everyday at 12 midnight
+    @Scheduled(cron = "0 55 17 * * *") // runs everyday at 12 midnight
     public void combineDataTrainModel() {
         try {
             sendDataFromFoodPostingsToGCPBucket();
