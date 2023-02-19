@@ -36,7 +36,7 @@ public class ScheduledTasks {
     @Autowired
     GoogleCloudBucketUtil googleCloudBucketUtil;
 
-    @Scheduled(cron = "0 05 17 * * *") // runs everyday at 12 midnight
+    @Scheduled(cron = "0 0 0 * * *") // runs everyday at 12 midnight
     public void combineDataTrainModel() {
         try {
             sendDataFromFoodPostingsToGCPBucket();
@@ -164,7 +164,7 @@ public class ScheduledTasks {
                         else return Mono.just("-1"); // if unable to train model at flask server
                     }).block();
             count++;
-            if(accuracyStr != null && accuracyStr.equals("-1")) {
+            if(accuracyStr != null && !accuracyStr.equals("-1")) {
                 hasTrained = true;
                 Double accuracy = Double.parseDouble(accuracyStr);
                 if(predictHotspotService.saveAccuracy(accuracy).getData() == null) {
