@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.TimeZoneStorage;
-import org.hibernate.annotations.TimeZoneStorageType;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -63,11 +61,8 @@ public class Food {
     private IndividualUser individualUser;
 
     @NotNull
-    @TimeZoneStorage(TimeZoneStorageType.COLUMN)
     @JsonIgnore
     @Setter(AccessLevel.NONE)
     @Column(nullable=false,  name = "created_at")
     private ZonedDateTime createdAt = ZonedDateTime.now().withZoneSameInstant(ZoneId.of("Asia/Singapore"));
-
-
 }
